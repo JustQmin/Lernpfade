@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Binär &amp; Hex auffrischen</title>
+<style>
+/* Lernpfad Binär & Hex – eine Datei, offline nutzbar, kein Login.
+   Didaktik: kleine Schritte, erst ausprobieren, dann reflektieren (Tutorial-Hinweise mit kurzer Pause),
+   Stellenwerte über das Bündeln (Zählwerk: eine volle Umdrehung = ein Bündel), offene Aufgaben, Merkzettel. */
+:root {
+  --bg: #14161c; --panel: #1d2029; --panel2: #252937; --line: #323748;
+  --fg: #ece9e1; --muted: #9ba1b4;
+  --lamp-on: #ffc94a; --lamp-glow: rgba(255,190,60,.5); --lamp-off: #2a2d38;
+  --accent: #7fb2ff; --ok: #6fd39a; --hint: #ffd36b; --soft: #f0b37a;
+  --f-ui: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --f-mono: "Cascadia Mono", Consolas, "DejaVu Sans Mono", ui-monospace, monospace;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--fg); font: 17px/1.55 var(--f-ui); }
+.wrap { max-width: 900px; margin: 0 auto; padding: 16px 16px 48px; }
+h1 { font-size: clamp(1.25rem, 3vw, 1.7rem); margin: 0; }
+h2 { font-size: 1.3rem; margin: 0; }
+p { margin: 8px 0; }
+.muted { color: var(--muted); }
+.mono { font-family: var(--f-mono); }
+button, input, textarea { font: inherit; color: inherit; }
+
+header { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.hbtns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 14px; cursor: pointer; font-weight: 600; }
+.btn:hover:not(:disabled) { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #0d1424; }
+.btn.ghost { background: transparent; }
+.btn:disabled { opacity: .4; cursor: default; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; }
+nav button { background: var(--panel); border: 1px solid var(--line); border-radius: 99px; padding: 6px 13px; cursor: pointer; font-size: .92rem; color: var(--muted); }
+nav button.active { border-color: var(--accent); color: var(--fg); background: var(--panel2); }
+nav button.done { color: var(--ok); }
+nav button.done::before { content: "✓ "; }
+nav button.new { animation: pop .7s; }
+@keyframes pop { 40% { transform: scale(1.14); } }
+
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: clamp(16px, 3.5vw, 30px); margin-top: 14px; }
+.chhead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline; }
+.dots { display: flex; gap: 6px; margin: 10px 0 18px; flex-wrap: wrap; }
+.dots button { width: 28px; height: 8px; border-radius: 99px; border: 0; background: var(--line); padding: 0; cursor: pointer; }
+.dots button.done { background: var(--ok); }
+.dots button.cur { background: var(--accent); }
+.dots button:disabled { cursor: default; }
+.steptitle { font-weight: 700; font-size: 1.12rem; margin-bottom: 4px; }
+.kind { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #0d1424; background: var(--hint); border-radius: 6px; padding: 1px 7px; margin-left: 8px; vertical-align: 2px; }
+.kind.open { background: #b9a6ff; } .kind.partner { background: #8fe0c8; }
+.stage { min-height: 190px; }
+.fb { min-height: 1.6em; margin-top: 12px; font-weight: 600; }
+.fb.ok { color: var(--ok); }
+.fb.try { color: var(--soft); }
+.helpbox p { color: var(--hint); margin: 6px 0; }
+.navrow { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+input.ans { background: #10131a; border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; width: 9em; font-family: var(--f-mono); font-size: 1.1rem; }
+input.ans.w2 { width: 4.2em; text-align: center; }
+input.ans.wide { width: 16em; max-width: 100%; }
+textarea { width: 100%; min-height: 96px; background: #10131a; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; resize: vertical; }
+.box { background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin: 10px 0; }
+
+/* Zählwerk */
+.counter { display: inline-flex; flex-direction: column; gap: 6px; }
+.wheels { display: inline-flex; gap: 8px; padding: 10px; background: #0d0f14; border-radius: 12px; border: 1px solid var(--line); }
+.wheel { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.wheel .face { display: grid; place-items: center; width: 58px; height: 74px; background: linear-gradient(#262a38, #1a1d27 50%, #262a38); border-radius: 8px; font: 700 2.3rem var(--f-mono); border: 1px solid #343a4d; }
+.wheel .face.flip { animation: flip .4s; }
+.wheel .face.full { box-shadow: 0 0 0 3px var(--hint); }
+@keyframes flip { 0% { transform: rotateX(85deg); opacity: .2; } }
+.wheel .lab { font: .78rem var(--f-mono); color: var(--muted); min-height: 1.2em; text-align: center; max-width: 76px; }
+.wheel .lab.known { color: var(--hint); font-weight: 700; }
+.clicks { font-size: .9rem; color: var(--muted); }
+
+/* Lampen */
+.lamps { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: clamp(6px, 1.4vw, 14px); max-width: 640px; margin: 8px 0; }
+.bit { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.lamp { width: 100%; max-width: 66px; aspect-ratio: 1; border-radius: 50%; border: 3px solid var(--line); padding: 0;
+  background: radial-gradient(circle at 35% 30%, #3a3e4c, var(--lamp-off) 65%); cursor: pointer; transition: box-shadow .2s; }
+.lamp.on { background: radial-gradient(circle at 35% 30%, #fff6d8, var(--lamp-on) 55%, #e09a1c); border-color: #ffd97a; box-shadow: 0 0 16px 5px var(--lamp-glow); }
+.lamp:disabled { cursor: default; }
+.bit .d { font: 700 1.05rem var(--f-mono); color: var(--muted); }
+.bit.on .d { color: var(--lamp-on); }
+.bit .pv { font: .85rem var(--f-mono); color: var(--muted); }
+.decval { font: 700 1.6rem var(--f-mono); min-height: 1.6em; }
+
+/* Auswahl, Zuordnen, Byte */
+.opts { display: flex; flex-direction: column; gap: 8px; max-width: 580px; }
+.opt { text-align: left; background: #10131a; border: 2px solid var(--line); border-radius: 12px; padding: 10px 14px; cursor: pointer; }
+.opt:hover:not(:disabled) { border-color: var(--muted); }
+.opt.right { border-color: var(--ok); }
+.opt.tried { border-color: var(--soft); opacity: .75; }
+.match { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; max-width: 460px; }
+.mcol { display: flex; flex-direction: column; gap: 8px; }
+.mcard { background: #10131a; border: 2px solid var(--line); border-radius: 10px; padding: 7px; cursor: pointer; font: 700 1.2rem var(--f-mono); }
+.mcard.sel { border-color: var(--accent); }
+.mcard.done { border-color: var(--ok); color: var(--ok); opacity: .7; cursor: default; }
+.mcard.shake { animation: shake .3s; border-color: var(--soft); }
+@keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+.byte { display: inline-flex; gap: 14px; margin: 8px 0; flex-wrap: wrap; }
+.nib { text-align: center; }
+.nib .b { font: 700 1.9rem var(--f-mono); letter-spacing: .08em; background: #10131a; border: 1px solid var(--line); border-radius: 10px; padding: 2px 10px; display: inline-block; }
+.nib .p { font: .8rem var(--f-mono); color: var(--muted); letter-spacing: .62em; padding-left: .6em; }
+.nib .r { margin-top: 6px; }
+
+/* Farben */
+.mixer { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 16px; align-items: center; max-width: 680px; }
+.sw { width: 100%; aspect-ratio: 1; border-radius: 14px; border: 2px solid var(--line); }
+.chan { display: grid; grid-template-columns: 50px minmax(0, 1fr) 42px 34px; gap: 8px; align-items: center; margin: 6px 0; font-family: var(--f-mono); }
+.hexbig { font: 700 1.5rem var(--f-mono); }
+.swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+.swatch { width: 96px; height: 72px; border-radius: 10px; border: 3px solid var(--line); cursor: pointer; padding: 0; }
+.swatch.right { border-color: var(--ok); } .swatch.tried { border-color: var(--soft); opacity: .6; }
+
+/* Merkzettel, Spiele */
+.merk { border-left: 4px solid var(--hint); background: var(--panel2); border-radius: 0 12px 12px 0; padding: 10px 14px; margin: 10px 0; }
+.merk h3 { margin: 0 0 4px; font-size: 1rem; color: var(--hint); }
+.note { border-left: 4px solid #b9a6ff; background: var(--panel2); border-radius: 0 12px 12px 0; padding: 8px 14px; margin: 8px 0; }
+.note b { color: #b9a6ff; }
+.games { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.game { background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.game a { color: var(--accent); font-weight: 700; text-decoration: none; }
+.game a:hover { text-decoration: underline; }
+.tag { font-size: .75rem; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; color: var(--muted); margin-right: 4px; }
+
+/* Dialoge & Tutorial-Hinweis */
+dialog { background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 16px; padding: 22px; max-width: 560px; width: calc(100% - 32px); }
+dialog::backdrop { background: rgba(0,0,0,.6); }
+#tut { border: 2px solid var(--hint); max-width: 520px; }
+#tut h2 { color: var(--hint); font-size: 1.15rem; }
+#tut .tbody { font-size: 1.05rem; }
+#tut .think { margin-top: 10px; padding: 8px 12px; border-radius: 10px; background: var(--panel2); }
+.timer { height: 4px; background: var(--line); border-radius: 99px; overflow: hidden; margin: 14px 0 10px; }
+.timer > div { height: 100%; width: 0; background: var(--hint); }
+.code { font: 700 2rem var(--f-mono); letter-spacing: .12em; text-align: center; background: #0d0f14; border: 2px dashed var(--lamp-on); color: var(--lamp-on); border-radius: 12px; padding: 12px; margin: 12px 0; }
+.big { font-size: 1.1rem; }
+
+@media (max-width: 620px) {
+  .mixer { grid-template-columns: 1fr; } .mixer .sw { max-width: 130px; }
+  .wheel .face { width: 44px; height: 58px; font-size: 1.8rem; }
+  .wheel .lab { max-width: 52px; font-size: .7rem; }
+  .nib .b { font-size: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><h1>Binär &amp; Hex auffrischen</h1><div class="muted">Lernpfad · ca. 25 Minuten</div></div>
+    <div class="hbtns">
+      <button class="btn" id="btnSave">💾 Speichercode</button>
+    </div>
+  </header>
+  <nav id="nav"></nav>
+  <main class="card" id="main"></main>
+</div>
+
+<dialog id="tut" aria-labelledby="tutT">
+  <h2 id="tutT"></h2>
+  <div class="tbody" id="tutB"></div>
+  <div class="timer" aria-hidden="true"><div id="tutBar"></div></div>
+  <div class="row" style="justify-content:flex-end"><button class="btn primary" id="tutOk" disabled>Verstanden</button></div>
+</dialog>
+<dialog id="dlgSave">
+  <h2>Dein Speichercode</h2>
+  <p class="muted">Schreib ihn dir auf. Mit diesem Code geht es später genau hier weiter.</p>
+  <div class="code" id="codeOut"></div>
+  <div class="row" style="justify-content:flex-end"><button class="btn primary" data-close>OK</button></div>
+</dialog>
+<dialog id="dlgTeacher">
+  <h2>Lehrkraft</h2>
+  <p class="muted">Bis wohin soll freigeschaltet werden? Alle Kapitel davor gelten dann als erledigt.</p>
+  <div class="opts" id="teachOpts"></div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" data-close>Abbrechen</button></div>
+</dialog>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = rnd(0, i); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const bin = (v, n) => v.toString(2).padStart(n, "0");
+const bin8 = (v) => { const s = bin(v, 8); return s.slice(0, 4) + " " + s.slice(4); };
+const hex = (v, n) => v.toString(16).toUpperCase().padStart(n, "0");
+const clean = (s) => String(s).replace(/\s+/g, "").replace(/^#/, "").toUpperCase();
+const strip0 = (s) => s.replace(/^0+(?=.)/, "");
+const h = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); e.innerHTML = html; return e; };
+const PRAISE = ["Genau!", "Stark!", "Richtig!", "Sehr gut!", "Super!"];
+const praise = () => PRAISE[rnd(0, PRAISE.length - 1)];
+const TEACHER_CODE = "LK7Q4M";
+const TUT_SECS = 3;   // Sperrzeit der Tutorial-Hinweise in Sekunden
+
+// ============================================================
+// Tutorial-Hinweis: erscheint genau dann, wenn etwas passiert, und lässt sich erst nach kurzer Pause schließen
+// ============================================================
+const tutQueue = []; let tutBusy = false, tutMute = false;
+function tutorial(title, html, secs = 5, think) {
+  if (tutMute) return Promise.resolve();          // bei schon gelösten Schritten keine Hinweise wiederholen
+  return new Promise((res) => { tutQueue.push({ title, html, secs: TUT_SECS, think, res }); if (!tutBusy) nextTut(); });
+}
+function nextTut() {
+  const t = tutQueue.shift(); if (!t) { tutBusy = false; return; }
+  tutBusy = true;
+  $("tutT").textContent = "💡 " + t.title;
+  $("tutB").innerHTML = t.html + (t.think ? `<div class="think">🤔 ${t.think}</div>` : "");
+  const ok = $("tutOk"), bar = $("tutBar"); ok.disabled = true;
+  bar.style.transition = "none"; bar.style.width = "0";
+  $("tut").showModal();
+  requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.transition = `width ${t.secs}s linear`; bar.style.width = "100%"; }));
+  setTimeout(() => { ok.disabled = false; ok.focus(); }, t.secs * 1000);
+  ok.onclick = () => { $("tut").close(); t.res(); setTimeout(nextTut, 150); };
+}
+$("tut").addEventListener("cancel", (e) => { if ($("tutOk").disabled) e.preventDefault(); });
+
+// ============================================================
+// Bausteine (Widgets). ctx = { el, solved(msg), hint(msg) }
+// ============================================================
+// Zählwerk mit Rädchen; zeigt bei jedem Rädchen, nach wie vielen Klicks es sich zum ersten Mal bewegt (= Stellenwert)
+function counterWidget(ctx, { base, wheels = 4, start = 0, goal, goalMsg, events = [], reveal = true, showClicks = true }) {
+  let v = start, clicks = 0; const moved = new Array(wheels).fill(false);
+  const digit = (x, i) => hex(Math.floor(x / base ** i) % base, 1);
+  const box = h("div", { class: "counter" }), wrow = h("div", { class: "wheels" }), info = h("div", { class: "clicks" });
+  const faces = [], labs = [];
+  for (let i = wheels - 1; i >= 0; i--) {
+    const w = h("div", { class: "wheel" }), f = h("div", { class: "face" }), l = h("div", { class: "lab" });
+    w.append(f, l); wrow.append(w); faces[i] = f; labs[i] = l;
+  }
+  const draw = (prev) => {
+    for (let i = 0; i < wheels; i++) {
+      const d = digit(v, i), changed = prev !== undefined && digit(prev, i) !== d;
+      faces[i].textContent = d;
+      faces[i].classList.toggle("full", d === hex(base - 1, 1));
+      if (changed) { faces[i].classList.remove("flip"); void faces[i].offsetWidth; faces[i].classList.add("flip"); }
+      if (changed && i > 0 && !moved[i] && reveal) { moved[i] = true; labs[i].textContent = `nach ${clicks} Klicks`; labs[i].classList.add("known"); }
+    }
+    info.textContent = showClicks ? `Klicks bisher: ${clicks}` : "";
+  };
+  if (reveal) { labs[0].textContent = "jeder Klick"; labs[0].classList.add("known"); for (let i = 1; i < wheels; i++) labs[i].textContent = "?"; }
+  const plus = h("button", { class: "btn primary" }, "+1 drehen");
+  let busy = false;
+  plus.onclick = async () => {
+    if (busy || plus.disabled) return; const prev = v; v++; clicks++; draw(prev);
+    busy = true;
+    for (const e of events) if (!e.done && e.when(v, prev, clicks)) { e.done = true; await tutorial(e.title, e.text, e.secs || 5, e.think); }
+    busy = false;
+    if (goal && goal(v, clicks)) { plus.disabled = true; ctx.solved(goalMsg); }
+  };
+  box.append(wrow, info);
+  const row = h("div", { class: "row", style: "margin-top:12px" }); row.append(plus);
+  ctx.el.append(box, row);
+  draw();
+}
+function staticCounter(el, base, value, wheels = 4) {
+  const w = h("div", { class: "wheels" });
+  for (let i = wheels - 1; i >= 0; i--) w.append(h("div", { class: "wheel" }, `<div class="face">${hex(Math.floor(value / base ** i) % base, 1)}</div>`));
+  el.append(w);
+}
+// Eingabefelder; check(values) → true | Text (Hinweis) | null (allgemeiner Hinweis)
+function inputWidget(ctx, { fields, check, okMsg }) {
+  const row = h("div", { class: "row", style: "margin-top:10px" });
+  const ins = fields.map((f) => {
+    if (f.label) row.append(h("span", {}, f.label));
+    const inp = h("input", { class: "ans " + (f.w || ""), "aria-label": f.aria || f.label || "Antwort", autocomplete: "off" });
+    if (f.max) inp.maxLength = f.max;
+    row.append(inp); return inp;
+  });
+  const btn = h("button", { class: "btn primary" }, "Prüfen");
+  row.append(btn); ctx.el.append(row);
+  const go = () => {
+    const vals = ins.map((x) => clean(x.value));
+    if (vals.some((x) => x === "")) { ctx.hint("Fülle zuerst alle Felder aus."); return; }
+    const r = check(vals);
+    if (r === true) { ins.forEach((x) => x.disabled = true); btn.disabled = true; ctx.solved(typeof okMsg === "function" ? okMsg(vals) : okMsg); }
+    else ctx.hint(r || "Noch nicht ganz – probier es noch einmal.");
+  };
+  btn.onclick = go; ins.forEach((x) => x.addEventListener("keydown", (e) => { if (e.key === "Enter") go(); }));
+  setTimeout(() => ins[0].focus({ preventScroll: true }), 50);
+}
+// Offene Aufgabe: freie Antwort (wird nur während der Sitzung behalten)
+function textWidget(ctx, { key, min = 25, placeholder = "", check, okMsg = "Fertig – weiter geht's." }) {
+  const ta = h("textarea", { "aria-label": "Deine Antwort", placeholder });
+  ta.value = NOTES[key] || "";
+  const btn = h("button", { class: "btn primary" }, "Fertig");
+  const row = h("div", { class: "row", style: "margin-top:8px" }); row.append(btn);
+  ctx.el.append(ta, row);
+  btn.onclick = () => {
+    const t = ta.value.trim();
+    if (t.length < min) { ctx.hint("Schreib noch ein bisschen mehr – ein bis zwei ganze Sätze."); return; }
+    if (check) { const r = check(t); if (r !== true) { ctx.hint(r); return; } }
+    NOTES[key] = t; ctx.solved(okMsg);
+  };
+}
+function mcWidget(ctx, { opts, anyOk }) {
+  const box = h("div", { class: "opts" });
+  opts.forEach((o) => {
+    const b = h("button", { class: "opt" }, o.t);
+    b.onclick = () => {
+      if (o.ok || anyOk) { b.classList.add("right"); box.querySelectorAll(".opt").forEach((x) => x.disabled = true); ctx.solved(o.fb); }
+      else { b.classList.add("tried"); b.disabled = true; ctx.hint(o.fb); }
+    };
+    box.append(b);
+  });
+  ctx.el.append(box);
+}
+function lampsWidget(ctx, { n, mode, target, value = 0, showPV = true, showDec = false, goal, goalMsg, feedback, events = [] }) {
+  let v = mode === "read" ? target : value, busy = false;
+  const grid = h("div", { class: "lamps" }); grid.style.setProperty("--n", n);
+  const dec = h("div", { class: "decval" });
+  const draw = () => {
+    grid.innerHTML = "";
+    for (let i = n - 1; i >= 0; i--) {
+      const on = (v >> i) & 1, d = h("div", { class: "bit" + (on ? " on" : "") });
+      const l = h("button", { class: "lamp" + (on ? " on" : ""), "aria-label": "Bit mit Stellenwert " + 2 ** i, "aria-pressed": on ? "true" : "false" });
+      if (mode === "read") l.disabled = true;
+      l.onclick = async () => {
+        if (busy) return; const prev = v; v ^= 1 << i; draw(); busy = true;
+        for (const e of events) if (!e.done && e.when(v, prev)) { e.done = true; await tutorial(e.title, e.text, e.secs || 5, e.think); }
+        busy = false;
+        if (goal && goal(v)) ctx.solved(goalMsg);
+      };
+      d.append(l, h("div", { class: "d" }, String(on)));
+      if (showPV) d.append(h("div", { class: "pv" }, String(2 ** i)));
+      grid.append(d);
+    }
+    dec.innerHTML = showDec ? `= ${v}` : "";
+  };
+  draw(); ctx.el.append(grid, dec);
+  if (mode === "read") inputWidget(ctx, { fields: [{ label: "Dezimalzahl:" }], check: ([a]) => +a === target || (feedback ? feedback(+a) : null) });
+  if (mode === "set") {
+    const btn = h("button", { class: "btn primary" }, "Prüfen");
+    btn.onclick = () => {
+      if (v === target) { grid.querySelectorAll(".lamp").forEach((x) => x.disabled = true); btn.disabled = true; ctx.solved(); }
+      else ctx.hint(`Die Lampen zeigen gerade ${v}. ` + (v > target ? "Das ist mehr als " + target + "." : "Bis " + target + " fehlt noch etwas."));
+    };
+    const row = h("div", { class: "row" }); row.append(btn); ctx.el.append(row);
+  }
+  return { get: () => v };
+}
+function matchWidget(ctx, { values }) {
+  const L = h("div", { class: "mcol" }), R = h("div", { class: "mcol" });
+  let sel = null, matched = 0;
+  const pick = (c, side) => {
+    if (c.classList.contains("done")) return;
+    if (!sel || sel.side === side) { (side === "L" ? L : R).querySelectorAll(".mcard").forEach((x) => x.classList.remove("sel")); c.classList.add("sel"); sel = { c, side }; return; }
+    if (sel.c.dataset.v === c.dataset.v) {
+      [sel.c, c].forEach((x) => { x.classList.remove("sel"); x.classList.add("done"); });
+      if (++matched === values.length) ctx.solved("Alle Paare gefunden!");
+    } else { const a = sel.c; [a, c].forEach((x) => x.classList.add("shake")); setTimeout(() => [a, c].forEach((x) => x.classList.remove("shake", "sel")), 380); ctx.hint("Das passt noch nicht – rechne das Bitmuster mit 8 · 4 · 2 · 1 aus."); }
+    sel = null;
+  };
+  values.forEach((v) => { const c = h("button", { class: "mcard", "data-v": v }, bin(v, 4)); c.onclick = () => pick(c, "L"); L.append(c); });
+  shuffle([...values]).forEach((v) => { const c = h("button", { class: "mcard", "data-v": v }, hex(v, 1)); c.onclick = () => pick(c, "R"); R.append(c); });
+  const m = h("div", { class: "match" }); m.append(L, R); ctx.el.append(m);
+}
+function byteWidget(ctx, { value, guided, halves = true }) {
+  const s = bin(value, 8), hi = s.slice(0, 4), lo = s.slice(4), H = hex(value, 2);
+  if (!halves) ctx.el.append(h("div", { class: "nib" }, `<div class="b">${s}</div>`));
+  else {
+    const byte = h("div", { class: "byte" });
+    [hi, lo].forEach((q, k) => {
+      const done = guided && k === 0;
+      byte.append(h("div", { class: "nib" }, `<div class="b">${q}</div><div class="p">8421</div>
+        <div class="r mono">${done ? `${q.split("").map((c, i) => c === "1" ? [8, 4, 2, 1][i] : null).filter(Boolean).join(" + ")} = ${parseInt(q, 2)} = <b>${H[0]}</b>` : ""}</div>`));
+    });
+    ctx.el.append(byte);
+  }
+  const fbFor = (got, part) => { const d = parseInt(part, 2); return got === String(d) && d > 9 ? `${d} ist richtig gerechnet – als Hex-Ziffer schreibt man dafür ein einziges Zeichen.` : null; };
+  if (!halves) inputWidget(ctx, { fields: [{ label: "Hex:", w: "w2", max: 2 }],
+    check: ([a]) => a.padStart(2, "0") === H || (a.length === 1 ? "Ein Byte ergibt immer zwei Hex-Ziffern – teile es in zwei Hälften." : null) });
+  else if (guided) inputWidget(ctx, { fields: [{ label: "rechte Hälfte:", w: "w2", max: 2 }], okMsg: `${praise()} Zusammen ergibt das <b>${H}</b>.`, check: ([a]) => a === H[1] || fbFor(a, lo) });
+  else inputWidget(ctx, { fields: [{ label: "links:", w: "w2", max: 2 }, { label: "rechts:", w: "w2", max: 2 }], okMsg: `${praise()} Zusammen: <b>${H}</b>.`,
+    check: ([a, b]) => (a === H[0] && b === H[1]) || fbFor(a, hi) || fbFor(b, lo) || (a === H[0] ? "Die linke Hälfte stimmt schon!" : b === H[1] ? "Die rechte Hälfte stimmt schon!" : null) });
+}
+function mixerWidget(ctx, { start = [128, 128, 128], goal, goalMsg, events = [] }) {
+  const c = [...start], names = ["Rot", "Grün", "Blau"], cols = ["#ff6b6b", "#5fd38d", "#6fa8ff"];
+  const box = h("div", { class: "mixer" }), left = h("div"), right = h("div");
+  const sw = h("div", { class: "sw" }), code = h("div", { class: "hexbig", style: "text-align:center;margin-top:6px" });
+  let solved = false;
+  names.forEach((n, i) => {
+    const row = h("div", { class: "chan" }, `<span style="color:${cols[i]}">${n}</span>`);
+    const r = h("input", { type: "range", min: 0, max: 255, value: c[i], "aria-label": n, style: `accent-color:${cols[i]}` });
+    const d = h("span"), x = h("b");
+    r.oninput = () => { c[i] = +r.value; draw(); };
+    r.onchange = async () => {
+      for (const e of events) if (!e.done && e.when(c)) { e.done = true; await tutorial(e.title, e.text, e.secs || 5, e.think); }
+      if (!solved && goal && goal(c)) { solved = true; ctx.solved(goalMsg); }
+    };
+    row.append(r, d, x); left.append(row); row._d = d; row._x = x;
+  });
+  const draw = () => { [...left.children].forEach((row, i) => { row._d.textContent = c[i]; row._x.textContent = hex(c[i], 2); });
+    const s = "#" + c.map((v) => hex(v, 2)).join(""); sw.style.background = s; code.textContent = s; };
+  right.append(sw, code); box.append(left, right); ctx.el.append(box); draw();
+  return { get: () => "#" + c.map((v) => hex(v, 2)).join("") };
+}
+function swatchWidget(ctx, { code, options }) {
+  ctx.el.append(h("p", {}, `Welches Feld hat die Farbe <span class="hexbig">#${code}</span>?`));
+  const box = h("div", { class: "swatches" });
+  shuffle([code, ...options]).forEach((o) => {
+    const s = h("button", { class: "swatch", "aria-label": "Farbfeld" }); s.style.background = "#" + o;
+    s.onclick = () => {
+      if (o === code) { s.classList.add("right"); box.querySelectorAll(".swatch").forEach((x) => x.disabled = true); ctx.solved(); }
+      else { s.classList.add("tried"); s.disabled = true; ctx.hint("Noch nicht. Schau dir die drei Paare einzeln an: 00 = Kanal aus, FF = Kanal ganz an."); }
+    };
+    box.append(s);
+  });
+  ctx.el.append(box);
+}
+
+// ============================================================
+// Inhalte
+// ============================================================
+const CH = [
+{ name: "1 Zählwerk", title: "Kapitel 1 · Wie ein Zählwerk funktioniert",
+  intro: ["Willkommen im ersten Kapitel!", "Zählen kannst du längst. Hier geht es darum, <b>was beim Zählen eigentlich passiert</b> – Rädchen für Rädchen. Achte auf die gelben Hinweise: Sie tauchen auf, wenn es etwas zu beobachten gibt."],
+  merk: "Ein Rädchen hat so viele Ziffern wie die <b>Basis</b> (dezimal 10, binär 2, hexadezimal 16). Hat es eine ganze Umdrehung gemacht, nimmt es das Rädchen links daneben um eins mit – das ist der <b>Übertrag</b>. Jedes Rädchen zählt also, wie oft sich das Rädchen rechts daneben ganz gedreht hat. So entstehen die <b>Stellenwerte</b>: dezimal 1, 10, 100 · binär 1, 2, 4, 8 · hexadezimal 1, 16, 256.",
+  steps: [
+  { t: "Das Dezimal-Zählwerk", text: "Hier ist ein Zählwerk mit zwei Rädchen, wie bei einem Kilometerzähler. Jedes Rädchen trägt die Ziffern 0 bis 9. Dreh so lange, bis das linke Rädchen auf <b>2</b> steht.",
+    w: (c) => counterWidget(c, { base: 10, wheels: 2, start: 0, goal: (v) => v >= 20, goalMsg: "Geschafft – das linke Rädchen hat zweimal weitergezählt.",
+      events: [
+        { when: (v, p, k) => k === 1, title: "Ein Klick", text: "Bei jedem Klick dreht sich nur das <b>rechte</b> Rädchen um eine Ziffer weiter. Das linke bleibt stehen.", secs: 4 },
+        { when: (v) => v === 9, title: "Letzte Ziffer erreicht", text: "Das rechte Rädchen zeigt jetzt seine letzte Ziffer: die 9. Mit dem nächsten Klick hat es eine ganze Umdrehung gemacht.", think: "Was passiert mit <b>beiden</b> Rädchen beim nächsten Klick? Überleg es dir, bevor du klickst.", secs: 6 },
+        { when: (v) => v === 10, title: "Übertrag!", text: "Das rechte Rädchen hat eine ganze Umdrehung gemacht und steht wieder bei 0. Dabei hat es das linke Rädchen <b>um eine Ziffer mitgenommen</b>. Das nennt man <b>Übertrag</b>.", secs: 6 },
+        { when: (v) => v === 20, title: "Was zählt das linke Rädchen?", text: "Das linke Rädchen bewegt sich nur, wenn das rechte einmal ganz herum ist – also alle <b>10</b> Klicks. Es zählt die vollen Umdrehungen. Deshalb ist die zweite Stelle <b>10</b> wert.", secs: 7 },
+      ] }),
+    hints: ["Klick einfach weiter auf „+1 drehen“ und beobachte die beiden Rädchen."] },
+  { t: "In eigenen Worten", kind: "open", text: "Erkläre in ein bis zwei Sätzen: Warum ist die zweite Stelle von rechts genau <b>10</b> wert? Benutze das Wort <b>Umdrehung</b>.",
+    w: (c) => textWidget(c, { key: "zehn", min: 30, placeholder: "Die zweite Stelle ist 10 wert, weil …",
+      check: (t) => /umdreh|herum|rund/i.test(t) || "Erkläre es mit dem Rädchen: Was muss das rechte Rädchen machen, damit sich das linke bewegt? (Wort: Umdrehung)" }),
+    hints: ["Denk an das rechte Rädchen: Wie viele Ziffern hat es, bis es wieder bei 0 ist?"] },
+  { t: "Rädchen mit nur zwei Ziffern", text: "Jetzt hat jedes Rädchen nur die Ziffern <b>0</b> und <b>1</b> – das ist das <b>Binärsystem</b>. Unter jedem Rädchen erscheint, nach wie vielen Klicks es sich zum ersten Mal bewegt. Dreh, bis sich das <b>vierte</b> Rädchen bewegt.",
+    w: (c) => counterWidget(c, { base: 2, wheels: 4, start: 0, goal: (v) => v >= 8, goalMsg: "Die Rädchen bewegen sich nach 1, 2, 4 und 8 Klicks.",
+      events: [
+        { when: (v, p, k) => k === 1, title: "Nur zwei Ziffern", text: "Das rechte Rädchen springt von 0 auf 1. Mehr Ziffern hat es nicht.", think: "Was wird beim nächsten Klick passieren?", secs: 5 },
+        { when: (v) => v === 2, title: "Schon eine Umdrehung", text: "Nach nur <b>2</b> Klicks ist das rechte Rädchen einmal herum. Es nimmt das zweite Rädchen mit: <span class='mono'>0010</span>. Das zweite Rädchen zählt also <b>Zweier</b>.", secs: 6 },
+        { when: (v) => v === 4, title: "Übertrag über zwei Stellen", text: "Diesmal standen beide rechten Rädchen bei 1. Der Übertrag ist durchgelaufen bis zum dritten Rädchen: <span class='mono'>0100</span>. Das dritte Rädchen bewegt sich erst nach 2 · 2 = <b>4</b> Klicks.", secs: 7 },
+        { when: (v) => v === 8, title: "Die Stellenwerte", text: "Jedes Rädchen bewegt sich erst, wenn das rechts daneben ganz herum ist. Weil jedes Rädchen nur 2 Ziffern hat, <b>verdoppelt</b> sich der Wert von Stelle zu Stelle: <b>1, 2, 4, 8</b>.", secs: 7 },
+      ] }),
+    hints: ["Beobachte die Beschriftungen unter den Rädchen."] },
+  { t: "Vorhersage", text: "Das Binär-Zählwerk zeigt <span class='mono'>0111</span>. Was zeigt es nach dem nächsten Klick?",
+    w: (c) => { staticCounter(c.el, 2, 7);
+      inputWidget(c, { fields: [{ label: "nach +1:" }], check: ([a]) => strip0(a) === "1000" ||
+        (/[2-9]/.test(a) ? "Eine 2 gibt es auf diesen Rädchen nicht. Was passiert, wenn ein Rädchen bei 1 ist und weitergedreht wird?" : strip0(a) === "110" || strip0(a) === "1110" ? "Der Übertrag läuft weiter: Jedes Rädchen, das bei 1 steht, macht eine volle Umdrehung." : null) }); },
+    hints: ["Alle drei rechten Rädchen stehen auf ihrer letzten Ziffer.", "Jedes davon springt auf 0 und nimmt das nächste mit – bis zum ersten Rädchen, das noch weiterdrehen kann."] },
+  { t: "Weitergedacht", text: "Ein Binär-Zählwerk mit 5 Rädchen startet bei <span class='mono'>00000</span>. Nach wie vielen Klicks bewegt sich das <b>fünfte</b> Rädchen zum ersten Mal?",
+    w: (c) => inputWidget(c, { fields: [{ label: "Klicks:" }], okMsg: "Genau: 1, 2, 4, 8, 16 – jede Stelle doppelt so viel.",
+      check: ([a]) => a === "16" || (a === "10" || a === "5" ? "Schau dir die Reihe aus dem Zählwerk an: 1, 2, 4, 8, … Wie geht sie weiter?" : null) }),
+    hints: ["Rädchen 1 bis 4 haben sich nach 1, 2, 4 und 8 Klicks bewegt.", "Von Rädchen zu Rädchen verdoppelt sich die Zahl."] },
+  { t: "16 Ziffern pro Rädchen", text: "Im <b>Hexadezimalsystem</b> hat jedes Rädchen <b>16</b> Ziffern. Dreh, bis sich das zweite Rädchen bewegt, und achte darauf, was nach der 9 kommt.",
+    w: (c) => counterWidget(c, { base: 16, wheels: 2, start: 6, reveal: false, goal: (v) => v >= 16, goalMsg: "Das linke Rädchen zählt die vollen Umdrehungen des rechten – und eine Umdrehung hat hier 16 Schritte.",
+      events: [
+        { when: (v) => v === 10, title: "Neue Ziffern", text: "Nach der 9 sind unsere Ziffern aufgebraucht – das Rädchen braucht aber noch sechs weitere. Man nimmt Buchstaben: <b>A = 10, B = 11, C = 12, D = 13, E = 14, F = 15</b>.", secs: 7 },
+        { when: (v) => v === 15, title: "Letzte Ziffer", text: "F ist die letzte Ziffer auf diesem Rädchen.", think: "Was zeigt das Zählwerk nach dem nächsten Klick?", secs: 5 },
+        { when: (v) => v === 16, title: "Eine Hex-Umdrehung", text: "<span class='mono'>10</span> heißt hier nicht zehn: Das linke Rädchen hat eine volle Umdrehung von <b>16</b> Ziffern gezählt. Die zweite Stelle ist im Hexadezimalsystem <b>16</b> wert.", secs: 7 },
+      ] }),
+    hints: ["Klick weiter, bis sich das linke Rädchen bewegt."] },
+  { t: "Ein ausgedachtes Zahlensystem", text: "Stell dir Rädchen mit nur <b>drei</b> Ziffern vor: 0, 1 und 2. Schreibe die ersten <b>zehn</b> Zahlen auf, die so ein Zählwerk zeigt – beginnend bei 0, getrennt durch Kommas.",
+    w: (c) => textWidget(c, { key: "basis3", min: 15, placeholder: "0, 1, 2, …", okMsg: "Genau so zählt ein Zählwerk mit drei Ziffern pro Rädchen.",
+      check: (t) => {
+        const nums = t.match(/[0-9]+/g) || [];
+        if (nums.some((n) => /[3-9]/.test(n))) return "Auf diesen Rädchen gibt es nur die Ziffern 0, 1 und 2.";
+        if (nums.length < 10) return "Schreib zehn Zahlen auf, getrennt durch Kommas.";
+        const want = ["0", "1", "2", "10", "11", "12", "20", "21", "22", "100"];
+        const bad = want.findIndex((w, i) => strip0(nums[i]) !== w);
+        if (bad === -1) return true;
+        return bad === 0 ? "Fang bei 0 an." : `Bis ${nums[bad - 1]} passt alles. Was zeigt das Zählwerk beim nächsten Klick?`;
+      } }),
+    hints: ["Nach der 2 hat das rechte Rädchen eine ganze Umdrehung gemacht.", "Was passiert, wenn beide Rädchen bei 2 stehen?"] },
+]},
+{ name: "2 Bits", title: "Kapitel 2 · Bits und Stellenwerte",
+  intro: ["Vom Rädchen zur Lampe", "Ein binäres Rädchen hat nur zwei Zustände – genau wie ein Schalter oder eine Lampe: <b>aus = 0, an = 1</b>. So eine Stelle heißt <b>Bit</b>. In einem Computerchip stecken Milliarden winziger Schalter, die Transistoren."],
+  merk: "Ein <b>Bit</b> speichert genau eine 0 oder eine 1. Die Stellenwerte verdoppeln sich von rechts nach links: 1, 2, 4, 8, 16, 32, 64, 128.<br><b>Binär → Dezimal:</b> die Stellenwerte aller Einsen addieren.<br><b>Dezimal → Binär:</b> von links den größten Stellenwert nehmen, der noch passt, und abziehen.<br><b>8 Bit = 1 Byte:</b> Werte von 0 bis 255, also <b>256</b> verschiedene Werte.",
+  steps: [
+  { t: "Lampen erforschen", text: "Schalte die Lampen an und aus und beobachte die Zahl darunter. Finde heraus, welchen Wert jede Lampe <b>allein</b> hat. Stelle dann mit <b>genau einer</b> Lampe die Zahl 8 ein.",
+    w: (c) => lampsWidget(c, { n: 4, mode: "explore", showPV: false, showDec: true, goal: (v) => v === 8, goalMsg: "Die linke Lampe ist 8 wert.",
+      events: [{ when: (v, p) => p === 0 && v !== 0, title: "Eine Lampe = ein Bit", text: "Jede Lampe ist ein Bit. Leuchtet sie, zählt ihr Wert mit. Erinnerst du dich an die Klicks aus dem Zählwerk?", think: "Welche Werte erwartest du bei den anderen Lampen?", secs: 5 }] }),
+    hints: ["Schalte immer nur eine Lampe an und lies die Zahl ab."] },
+  { t: "Das Muster", text: "Welche Werte haben die vier Lampen – von <b>rechts nach links</b>?",
+    w: (c) => mcWidget(c, { opts: [
+      { t: "1, 2, 3, 4", fb: "Probier es aus: Die dritte Lampe von rechts allein ergibt nicht 3." },
+      { t: "1, 2, 4, 8", ok: true, fb: "Genau – die gleichen Zahlen wie beim Binär-Zählwerk. Jeder Wert ist doppelt so groß wie der rechts daneben." },
+      { t: "1, 10, 100, 1000", fb: "So wäre es bei Rädchen mit 10 Ziffern. Hier hat jede Stelle nur zwei." },
+      { t: "2, 4, 6, 8", fb: "Schau auf die Lampe ganz rechts: Sie allein ergibt 1." }] }) },
+  { t: "Ablesen", text: "Welche Dezimalzahl zeigen die Lampen? Die Stellenwerte stehen jetzt darunter.",
+    w: (c) => lampsWidget(c, { n: 4, mode: "read", target: 5,
+      feedback: (a) => a === 2 ? "Du hast die Lampen gezählt, die leuchten. Addiere stattdessen ihre Stellenwerte." : a === 10 ? "Die Stellenwerte wachsen von rechts nach links – die rechte Lampe ist 1 wert." : a === 101 ? "Das ist die Binärzahl selbst. Gesucht ist ihr Wert." : null }),
+    hints: ["Addiere die Stellenwerte der Lampen, die leuchten."] },
+  { t: "Einstellen", text: "Schalte die Lampen so, dass sie die Zahl <b>11</b> darstellen.",
+    w: (c) => lampsWidget(c, { n: 4, mode: "set", target: 11 }),
+    hints: ["Fang links an: Passt die 8 in die 11? Wie viel bleibt dann übrig?", "Mit dem Rest machst du genauso weiter: Passt die 4? Passt die 2?"] },
+  { t: "Ein ganzes Byte", text: "Jetzt sind es <b>8 Bit</b> – das nennt man ein <b>Byte</b>. Welche Zahl zeigen die Lampen?",
+    w: (c) => lampsWidget(c, { n: 8, mode: "read", target: 42,
+      feedback: (a) => a === 3 ? "Du hast die Lampen gezählt. Addiere ihre Stellenwerte." : a === 84 || a === 21 ? "Knapp – prüfe, unter welcher Lampe welcher Stellenwert steht." : null }),
+    hints: ["Es leuchten drei Lampen. Welche Stellenwerte stehen darunter?"] },
+  { t: "Einstellen mit 8 Bit", text: "Stelle die Zahl <b>100</b> ein. Arbeite dich vom größten Stellenwert nach rechts vor.",
+    w: (c) => lampsWidget(c, { n: 8, mode: "set", target: 100 }),
+    hints: ["Passt 128 in 100? Passt 64? Wie viel bleibt dann übrig?", "Mach mit dem Rest weiter: Passt 32 hinein?"] },
+  { t: "Deine Zahl", kind: "open", text: "Such dir selbst eine Zahl zwischen <b>100</b> und <b>255</b> aus, trag sie ein und stelle sie mit den Lampen ein.",
+    w: (c) => { const lw = lampsWidget(c, { n: 8, mode: "explore", showDec: false });
+      inputWidget(c, { fields: [{ label: "Meine Zahl:" }], okMsg: (vals) => `${praise()} ${vals[0]} ist binär ${bin8(+vals[0])}.`,
+        check: ([a]) => {
+          const z = +a;
+          if (!/^\d+$/.test(a) || z < 100 || z > 255) return "Wähle eine ganze Zahl zwischen 100 und 255.";
+          const v = lw.get();
+          return v === z || `Die Lampen zeigen gerade ${v}. ` + (v > z ? "Das ist mehr als " + z + "." : "Bis " + z + " fehlt noch etwas.");
+        } }); },
+    hints: ["Fang links an: Passt 128 in deine Zahl? Wie viel bleibt übrig?", "Mach mit dem Rest bei der nächsten Lampe weiter."] },
+  { t: "Wie weit geht ein Byte?", text: "Alle 8 Lampen leuchten. Welche Zahl ist das – und wie viele verschiedene Werte kann ein Byte insgesamt speichern?",
+    w: (c) => { lampsWidget(c, { n: 8, mode: "explore", value: 255 });
+      inputWidget(c, { fields: [{ label: "größte Zahl:" }, { label: "Anzahl Werte:" }], okMsg: "Genau. Merk dir die 256 – sie kommt bei den Farben wieder!",
+        check: ([a, b]) => (a === "255" && b === "256") || (a === "255" ? "Die größte Zahl stimmt! Bei der Anzahl: Zählt die 0 nicht auch mit?" : "Addiere alle Stellenwerte: 128 + 64 + …") }); },
+    hints: ["Addiere alle acht Stellenwerte.", "Die Werte gehen von 0 bis zur größten Zahl. Wie viele Zahlen sind das?"] },
+]},
+{ name: "3 Hexadezimal", title: "Kapitel 3 · Vier Bits = eine Hex-Ziffer",
+  intro: ["Warum noch ein Zahlensystem?", "Was kannst du dir schneller merken: <span class='mono'>1101 1001</span> oder <span class='mono'>D9</span>? Beides ist <b>dieselbe Zahl</b>. Programmiererinnen und Programmierer schreiben Binärzahlen deshalb gern hexadezimal – kürzer und leichter zu lesen. In diesem Kapitel findest du heraus, warum das so gut klappt."],
+  merk: "Mit 4 Bit gibt es 16 Werte (0 – 15) – genau so viele, wie das Hexadezimalsystem Ziffern hat. Deshalb gilt: <b>4 Bit = 1 Hex-Ziffer</b> und <b>1 Byte = 2 Hex-Ziffern</b>.<br><b>Binär → Hex:</b> das Byte in zwei Hälften teilen, jede Hälfte mit 8 · 4 · 2 · 1 ausrechnen und als Hex-Ziffer schreiben, z. B. 1101 1001 → D9.",
+  steps: [
+  { t: "Vier Lampen voll", text: "Schalte alle 4 Lampen an. Welche Zahl entsteht?",
+    w: (c) => { lampsWidget(c, { n: 4, mode: "explore" });
+      inputWidget(c, { fields: [{ label: "Zahl:" }], okMsg: "Genau, 15. Mit 4 Bit gibt es also 16 Werte (0 bis 15) – genau so viele, wie ein Hex-Rädchen Ziffern hat.",
+        check: ([a]) => a === "15" || (a === "16" ? "16 ist die Anzahl der Werte (mit der 0). Gesucht ist die größte Zahl." : null) }); },
+    hints: ["Addiere die vier Stellenwerte."] },
+  { t: "Eine Hex-Ziffer", text: "Welche Hex-Ziffer gehört zu dem Bitmuster <span class='mono'>1010</span>?",
+    w: (c) => { c.el.append(h("div", { class: "nib" }, `<div class="b">1010</div><div class="p">8421</div>`));
+      inputWidget(c, { fields: [{ label: "Hex-Ziffer:", w: "w2", max: 2 }],
+        check: ([a]) => a === "A" || (a === "10" ? "10 ist richtig gerechnet! Als Hex-Ziffer schreibt man 10 aber als ein Zeichen." : null) }); },
+    hints: ["Rechne zuerst den Dezimalwert aus.", "Erinnerst du dich an das Hex-Rädchen? Was kam nach der 9?"] },
+  { t: "Paare finden", text: "Klicke ein Bitmuster an und danach die passende Hex-Ziffer.",
+    w: (c) => matchWidget(c, { values: shuffle([3, 6, 9, 11, 12, 14]) }),
+    hints: ["Rechne jedes Bitmuster mit 8 · 4 · 2 · 1 aus. Werte über 9 sind Buchstaben."] },
+  { t: "Ein Byte – mit Beispiel", text: "Ein Byte wird in <b>zwei Hälften</b> zu je 4 Bit geteilt. Die linke Hälfte ist schon vorgerechnet. Wie heißt die rechte?",
+    w: (c) => byteWidget(c, { value: 0xD9, guided: true }),
+    hints: ["Rechne die rechte Hälfte genauso wie die linke."] },
+  { t: "Ein Byte – du rechnest", text: "Rechne beide Hälften in Hex-Ziffern um.",
+    w: (c) => byteWidget(c, { value: 0x6E }),
+    hints: ["Jede Hälfte einzeln mit 8 · 4 · 2 · 1 ausrechnen.", "Ist ein Ergebnis größer als 9? Dann wird es ein Buchstabe."] },
+  { t: "Ohne Trennung", text: "Jetzt ist das Byte nicht mehr geteilt. Welche Hexadezimalzahl ist das?",
+    w: (c) => byteWidget(c, { value: 0xB4, halves: false }),
+    hints: ["Teile das Byte selbst in zwei Hälften zu je 4 Bit."] },
+  { t: "Und rückwärts", text: "Schreibe die Hexadezimalzahl <span class='hexbig'>3C</span> als Binärzahl mit 8 Bit.",
+    w: (c) => inputWidget(c, { fields: [{ label: "binär:", w: "wide" }], okMsg: "Genau – jede Hex-Ziffer wird zu genau 4 Bit.",
+      check: ([a]) => a.padStart(8, "0") === "00111100" || (a === "111100" ? "Fast – fülle auf 8 Stellen auf: Jede Hex-Ziffer wird zu genau 4 Bit." : null) }),
+    hints: ["Jede Hex-Ziffer wird einzeln zu 4 Bit: erst die 3, dann das C.", "Welchen Dezimalwert hat C? Wie stellst du ihn mit 8 · 4 · 2 · 1 dar?"] },
+  { t: "Hex-Wörter", kind: "open", text: "Manche Hex-Zahlen sehen aus wie Wörter, zum Beispiel <span class='mono'>CAFE</span> oder <span class='mono'>BAD</span>. Finde ein <b>eigenes</b> Wort aus den Buchstaben A – F (mindestens 3 Buchstaben) und schreibe es binär.",
+    w: (c) => inputWidget(c, { fields: [{ label: "Wort:", max: 6 }, { label: "binär:", w: "wide" }],
+      okMsg: ([w]) => `${praise()} ${w} ist eine echte Hex-Zahl. Findest du noch ein längeres Wort?`,
+      check: ([w, b]) => {
+        if (!/^[A-F]{3,6}$/.test(w)) return "Das Wort darf nur aus A, B, C, D, E, F bestehen und muss mindestens 3 Buchstaben haben.";
+        if (["CAFE", "BAD"].includes(w)) return "Such dir ein eigenes Wort, nicht das Beispiel.";
+        const want = [...w].map((ch) => bin(parseInt(ch, 16), 4)).join("");
+        return b === want || (b.length !== want.length ? `Jeder Buchstabe wird zu 4 Bit – dein Wort braucht also ${want.length} Bit.` : "Prüfe Buchstabe für Buchstabe: Welche 4 Bit gehören zu jedem?");
+      } }),
+    hints: ["Ideen: ein Tier, das gern auf Bäume klettert, oder ein Märchenwesen mit Flügeln …","Rechne jeden Buchstaben einzeln in 4 Bit um und häng sie hintereinander."] },
+]},
+{ name: "4 Farben", title: "Kapitel 4 · Farben als Hex-Code",
+  intro: ["Zurück zu den Farben", "In der letzten Stunde hast du Farben mit drei Zahlen von 0 bis 255 gemischt. Du weißt jetzt: <b>0 bis 255 – das ist genau ein Byte.</b> Was heißt das für die Schreibweise von Farben?"],
+  merk: "Jeder Farbkanal (Rot, Grün, Blau) wird mit <b>1 Byte</b> gespeichert, also mit 0 bis 255 – das sind genau <b>2 Hex-Ziffern</b> (00 bis FF). Ein Hex-Code <span class='mono'>#RRGGBB</span> setzt die drei Kanäle hintereinander: <span class='mono'>#FF8800</span> = Rot 255, Grün 136, Blau 0 = Orange.",
+  steps: [
+  { t: "Farben mischen", text: "Mische mit den Reglern <b>Gelb</b>: Rot und Grün ganz an, Blau ganz aus. Beobachte dabei den Code unter dem Farbfeld.",
+    w: (c) => mixerWidget(c, { start: [80, 80, 160], goal: (x) => x[0] === 255 && x[1] === 255 && x[2] === 0, goalMsg: "Gelb hat den Code <span class='mono'>#FFFF00</span>.",
+      events: [{ when: () => true, title: "Drei Paare", text: "Schau auf den Code unter dem Farbfeld: Er besteht aus <b>drei Paaren</b>. Jeder Regler verändert genau ein Paar – denn jeder Kanal ist ein Byte, und ein Byte sind zwei Hex-Ziffern.", think: "Welches Paar gehört zu welchem Regler?", secs: 6 }] }),
+    hints: ["Zieh die Regler für Rot und Grün ganz nach rechts und Blau ganz nach links."] },
+  { t: "Drei Paare", text: "Welche Ziffern stehen in <span class='hexbig'>#12AB34</span> für <b>Grün</b>?",
+    w: (c) => mcWidget(c, { opts: [
+      { t: "12", fb: "Das erste Paar gehört zum ersten Regler." }, { t: "AB", ok: true, fb: "Genau – das mittlere Paar ist Grün." },
+      { t: "34", fb: "Das letzte Paar gehört zum letzten Regler." }, { t: "2A", fb: "Jeder Kanal hat ein eigenes Paar – die Paare überschneiden sich nicht." }] }) },
+  { t: "Farbe erkennen", text: "",
+    w: (c) => swatchWidget(c, { code: "00FFFF", options: ["FFFF00", "FF00FF", "00FF88"] }),
+    hints: ["Welche Kanäle sind ganz an (FF), welche aus (00)?", "Denk an die Lampen aus der letzten Stunde: Welche Mischfarbe ergeben Grün und Blau?"] },
+  { t: "Zurück zur Dezimalzahl", text: "<span class='hexbig'>#FF8800</span> ist Orange. Wie viel <b>Grün</b> steckt darin – als Dezimalzahl?",
+    w: (c) => inputWidget(c, { fields: [{ label: "Grün =" }], okMsg: "Genau – die linke Hex-Ziffer zählt 16-fach.",
+      check: ([a]) => a === "136" || (a === "88" ? "88 ist die Hex-Schreibweise. Erinnere dich ans Hex-Zählwerk: Was ist die linke Stelle wert?" : a === "255" ? "255 ist der Rotanteil. Grün ist das mittlere Paar." : a === "16" ? "8 + 8 wäre richtig, wenn beide Stellen gleich viel wert wären. Die linke ist aber 16 wert." : null) }),
+    hints: ["Grün ist das mittlere Paar.", "Beim Hex-Zählwerk war die linke Stelle 16 wert."] },
+  { t: "Deine Farbe", kind: "open", text: "Mische deine <b>Lieblingsfarbe</b>. Schreib ihren Hex-Code auf und erkläre, warum er so aussieht: Welcher Kanal ist groß, welcher klein?",
+    w: (c) => { const mx = mixerWidget(c, { start: [120, 60, 200] });
+      textWidget(c, { key: "farbe", min: 25, okMsg: `${praise()} Weiter geht's.`, placeholder: "Meine Farbe hat den Code #…, weil …",
+        check: (t) => /#?[0-9A-F]{6}/i.test(t) || `Schreib den Code deiner Farbe mit in deine Antwort (gerade eingestellt: ${mx.get()}).` }); },
+    hints: ["Groß heißt: Die zwei Ziffern liegen nahe an FF. Klein heißt: nahe an 00."] },
+  { t: "Zielfarbe", text: "Stelle ein <b>kräftiges Violett</b> ein: viel Rot, (fast) kein Grün, viel Blau – Rot und Blau jeweils mindestens 150, Grün höchstens 40.",
+    w: (c) => mixerWidget(c, { start: [60, 160, 60], goal: (x) => x[0] >= 150 && x[2] >= 150 && x[1] <= 40, goalMsg: "Schön! Schau dir das mittlere Paar an: Es liegt nahe bei 00." }),
+    hints: ["Welcher Regler muss fast ganz nach links?"] },
+  { t: "Warum genau zwei?", text: "Warum braucht jeder Farbkanal genau <b>zwei</b> Hex-Ziffern?",
+    w: (c) => mcWidget(c, { opts: [
+      { t: "Ein Kanal ist 1 Byte = 8 Bit, und je 4 Bit ergeben eine Hex-Ziffer.", ok: true, fb: "Genau – 8 Bit = 2 · 4 Bit = 2 Hex-Ziffern, von 00 bis FF." },
+      { t: "Weil zwei Ziffern bis 99 reichen.", fb: "Bei Hex-Ziffern geht es bis FF. Welche Dezimalzahl ist das?" },
+      { t: "Weil es zwei Grundfarben gibt.", fb: "Es gibt drei Kanäle: Rot, Grün und Blau. Die Frage ist, wie viele Ziffern pro Kanal nötig sind." }] }) },
+]},
+];
+
+const COLORNAMES = { "FF0000": "Rot", "00FF00": "Grün", "0000FF": "Blau", "FFFF00": "Gelb", "00FFFF": "Cyan", "FF00FF": "Magenta", "FFFFFF": "Weiß", "000000": "Schwarz" };
+function makeFinal() {
+  const R = () => rnd(20, 250);
+  const [cc1, cc2] = shuffle(Object.keys(COLORNAMES));
+  const ch3 = [R(), R(), R()], k = rnd(0, 2), kn = ["Rot", "Grün", "Blau"][k], hbv = R();
+  const bd = (v) => ({ q: `Binär → Dezimal: <span class="mono">${bin8(v)}</span>`, a: String(v), ch: 1 });
+  const db = (v) => ({ q: `Dezimal → Binär (8 Bit): <b>${v}</b>`, a: bin(v, 8), ch: 1, pad: 8 });
+  const bh = (v) => ({ q: `Binär → Hex: <span class="mono">${bin8(v)}</span>`, a: hex(v, 2), ch: 2, pad: 2 });
+  const hd = (v) => ({ q: `Hex → Dezimal: <span class="mono">${hex(v, 2)}</span>`, a: String(v), ch: 2 });
+  const col = (c) => ({ q: `Welche Farbe hat <span class="mono">#${c}</span>?`, a: COLORNAMES[c], ch: 3, choice: shuffle(Object.values(COLORNAMES)) });
+  return [
+    bd(rnd(5, 15)), bd(R()), db(rnd(9, 60)), db(R()),
+    bh(R()), bh(R()),
+    { q: `Hex → Binär (8 Bit): <span class="mono">${hex(hbv, 2)}</span>`, a: bin(hbv, 8), ch: 2, pad: 8 },
+    hd(rnd(17, 60)), hd(R()),
+    col(cc1), col(cc2),
+    { q: `Wie viel <b>${kn}</b> steckt in <span class="mono">#${ch3.map((x) => hex(x, 2)).join("")}</span>? (als Dezimalzahl)`, a: String(ch3[k]), ch: 3 },
+  ];
+}
+const GAMES = [
+  ["Binary Blitz", "https://games.penjee.com/binary-numbers-game/", "Zahlen als Bitmuster eintippen, bevor die Zeilen oben ankommen.", "Binär", "Englisch"],
+  ["Flippy Bit", "https://flippybitandtheattackofthehexadecimalsfrombase16.com/", "Hex-Zahlen fallen herunter – schieß sie mit dem passenden Bitmuster ab (Tastatur).", "Hex ↔ Binär", "Englisch"],
+  ["Hex Guess", "https://www.colormemorygame.com/variants/hex", "Eine Farbe wird gezeigt – tippe ihren Hex-Code. Je näher, desto mehr Punkte.", "Hex-Farben", "Englisch"],
+  ["Hexle", "https://hexle.us/", "Wordle für Farben: Finde zum Hex-Code das passende Farbfeld.", "Hex-Farben", "Englisch"],
+  ["Colour Matcher", "https://www.csfieldguide.org.nz/en/interactives/colour-matcher/", "Stelle eine Zielfarbe Bit für Bit nach.", "Farben & Bits", "Englisch"],
+  ["Binär-Dezimal-Trainer", "https://csg-tue.de/ium/bin-dec/", "Bits anklicken und umrechnen – mit Serienzähler.", "Binär", "Deutsch"],
+];
+
+// ============================================================
+// Zustand, Freischalten, Speichercode
+// ============================================================
+const P = { unl: 0, ch: [0, 0, 0, 0], fin: false, finScore: 0 };   // unl = von der Lehrkraft freigeschaltet bis (0–5)
+const NOTES = {}, SEEN = {};
+const chDone = (k) => P.ch[k] >= CH[k].steps.length;
+function unlocked(k) {               // 0–3 Kapitel, 4 Abschluss-Check, 5 Belohnung
+  if (k === 5) return P.fin || P.unl >= 5;
+  if (k === 4) return chDone(3) || P.fin || P.unl >= 4;
+  return k === 0 || P.ch[k] > 0 || chDone(k - 1) || P.unl >= k;
+}
+const ALPHA = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ", MASK = 0x15A3C96n;
+function pack() {
+  let v = 3n; const put = (x, b) => { v = (v << BigInt(b)) | BigInt(Math.max(0, Math.min(x, (1 << b) - 1))); };
+  put(P.unl, 3); P.ch.forEach((x) => put(x, 4)); put(+P.fin, 1); put(P.finScore, 4);   // 2 + 24 = 26 Bit
+  return v;
+}
+const chk = (v) => { let c = 0x2Bn; for (let i = 0n; i < 28n; i += 4n) c = ((c * 31n) ^ ((v >> i) & 15n)) & 0xFFn; return c; };
+function encode() {
+  const d = pack() ^ MASK; let big = (d << 8n) | chk(d), s = "";
+  for (let i = 0; i < 7; i++) { s = ALPHA[Number(big % 32n)] + s; big /= 32n; }
+  return s.slice(0, 4) + "-" + s.slice(4);
+}
+function decode(code) {
+  const s = clean(code).replace(/-/g, "");
+  if (!/^[2-9A-HJ-NP-Z]{7}$/.test(s)) return null;
+  let big = 0n; for (const c of s) big = big * 32n + BigInt(ALPHA.indexOf(c));
+  const d = big >> 8n; if (chk(d) !== (big & 0xFFn)) return null;
+  let v = d ^ MASK; const take = (b) => { const r = Number(v & BigInt((1 << b) - 1)); v >>= BigInt(b); return r; };
+  const finScore = take(4), fin = take(1), ch = [0, 0, 0, 0].map(() => take(4)).reverse(), unl = take(3);
+  if (v !== 3n || unl > 5) return null;
+  return { unl, ch: ch.map((x, k) => Math.min(x, CH[k].steps.length)), fin: !!fin, finScore: Math.min(finScore, 12) };
+}
+function persist() { try { localStorage.setItem("binhex-lernpfad3", encode()); } catch (e) { /* ok */ } }
+
+// ============================================================
+// Oberfläche
+// ============================================================
+let view = { page: "start", k: 0, step: 0 };
+const known = new Set();
+function renderNav() {
+  const nav = $("nav"); nav.innerHTML = "";
+  const items = [["Start", "start"], ...CH.map((c, k) => [c.name, k]), ["Abschluss-Check", "fin"], ["Geschafft", "reward"]];
+  items.forEach(([name, id]) => {
+    const k = id === "fin" ? 4 : id === "reward" ? 5 : id;
+    if (id !== "start" && !unlocked(k)) return;
+    const b = h("button", {}, name);
+    if ((view.page === "chapter" && view.k === id) || view.page === id) b.classList.add("active");
+    if ((typeof id === "number" && chDone(id)) || (id === "fin" && P.fin)) b.classList.add("done");
+    const key = String(id); if (!known.has(key)) { known.add(key); if (known.size > 2) b.classList.add("new"); }
+    b.onclick = () => id === "start" ? go({ page: "start" }) : typeof id === "number" ? openChapter(id) : go({ page: id });
+    nav.append(b);
+  });
+}
+function go(v) { view = { ...view, ...v }; render(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+function openChapter(k) {
+  go({ page: "chapter", k, step: Math.min(P.ch[k], CH[k].steps.length - 1) });
+  if (!SEEN["intro" + k] && P.ch[k] === 0) { SEEN["intro" + k] = true; tutorial(CH[k].intro[0], CH[k].intro[1], 6); }
+}
+function resume() {
+  const open = [0, 1, 2, 3].filter((x) => unlocked(x) && !chDone(x));
+  const started = open.filter((x) => P.ch[x] > 0);
+  const k = started.length ? started[started.length - 1] : open[0];
+  k === undefined ? go({ page: P.fin ? "reward" : "fin" }) : openChapter(k);
+}
+function update() { persist(); renderNav(); }
+function render() {
+  tutMute = false;
+  renderNav();
+  const m = $("main"); m.innerHTML = "";
+  ({ start: renderStart, chapter: renderChapter, merkdone: renderMerkDone, fin: renderFinal, reward: renderReward })[view.page](m);
+}
+
+// ---------- Start ----------
+function renderStart(m) {
+  m.append(h("h2", {}, "Willkommen!"));
+  m.append(h("p", {}, "In diesem Lernpfad frischst du Binärzahlen, Hexadezimalzahlen und Hex-Farben auf – in kleinen Schritten. Du probierst zuerst aus und denkst dann darüber nach."));
+  m.append(h("div", { class: "box" }, `<p><b>So funktioniert es</b></p>
+    <p>· Gelbe 💡-Hinweise tauchen auf, wenn es etwas zu beobachten gibt. Lies sie in Ruhe – der Knopf wird nach kurzer Zeit frei.</p>
+    <p>· Kommst du nicht weiter, gibt dir der Knopf <b>Hilfe 💡</b> einen Tipp.</p>
+    <p>· Mit <b>💾 Speichercode</b> bekommst du einen Code. Gibst du ihn später ein, geht es genau dort weiter.</p>`));
+  const row = h("div", { class: "row", style: "margin-top:14px" });
+  const started = P.ch.some((x) => x > 0) || P.unl > 0 || P.fin;
+  const b1 = h("button", { class: "btn primary big" }, started ? "Weiterlernen" : "Los geht's");
+  b1.onclick = resume; row.append(b1); m.append(row);
+  const load = h("div", { class: "box", style: "margin-top:18px" }, "<p><b>Du hast schon einen Speichercode?</b></p>");
+  const lrow = h("div", { class: "row" }); const inp = h("input", { class: "ans", placeholder: "XXXX-XXX", maxlength: 9, "aria-label": "Speichercode" });
+  const lb = h("button", { class: "btn" }, "Fortschritt laden"); const lfb = h("div", { class: "fb" });
+  const doLoad = () => {
+    if (clean(inp.value).replace(/-/g, "") === TEACHER_CODE) { inp.value = ""; openTeacher(); return; }
+    const st = decode(inp.value);
+    if (!st) { lfb.className = "fb try"; lfb.textContent = "Dieser Code passt nicht – prüfe ihn noch einmal. (0, O, 1 und I kommen im Code nicht vor.)"; return; }
+    Object.assign(P, st); update(); lfb.className = "fb ok"; lfb.textContent = "✓ Fortschritt geladen."; setTimeout(resume, 600);
+  };
+  lb.onclick = doLoad; inp.addEventListener("keydown", (e) => { if (e.key === "Enter") doLoad(); });
+  lrow.append(inp, lb); load.append(lrow, lfb); m.append(load);
+}
+function openTeacher() {
+  const box = $("teachOpts"); box.innerHTML = "";
+  [["Kapitel 2 freischalten", 1], ["Kapitel 3 freischalten", 2], ["Kapitel 4 freischalten", 3], ["Abschluss-Check freischalten", 4], ["Alles freischalten (inkl. Spieleseite)", 5]].forEach(([t, k]) => {
+    const b = h("button", { class: "opt" }, t);
+    b.onclick = () => { P.unl = Math.max(P.unl, k); for (let j = 0; j < Math.min(k, 4); j++) P.ch[j] = CH[j].steps.length; if (k === 5) P.fin = true; update(); $("dlgTeacher").close(); resume(); };
+    box.append(b);
+  });
+  $("dlgTeacher").showModal();
+}
+
+// ---------- Kapitel ----------
+function renderChapter(m) {
+  const k = view.k, ch = CH[k], i = view.step, st = ch.steps[i];
+  m.append(h("div", { class: "chhead" }, `<h2>${ch.title}</h2><span class="muted">Schritt ${i + 1} von ${ch.steps.length}</span>`));
+  const dots = h("div", { class: "dots" });
+  ch.steps.forEach((_, j) => { const d = h("button", { "aria-label": "Schritt " + (j + 1) }); if (j < P.ch[k]) d.classList.add("done"); if (j === i) d.classList.add("cur");
+    if (j > P.ch[k]) d.disabled = true; else d.onclick = () => go({ step: j }); dots.append(d); });
+  m.append(dots);
+  const kindTag = st.kind === "open" ? '<span class="kind open">offene Aufgabe</span>' : st.kind === "partner" ? '<span class="kind partner">zu zweit</span>' : "";
+  m.append(h("div", { class: "steptitle" }, st.t + kindTag));
+  if (st.text) m.append(h("p", {}, st.text));
+  const stage = h("div", { class: "stage" }), fbx = h("div", { class: "fb" }), help = h("div", { class: "helpbox" });
+  m.append(stage, fbx, help);
+  const solvedBefore = i < P.ch[k];
+  tutMute = solvedBefore;
+  const navrow = h("div", { class: "navrow" });
+  const back = h("button", { class: "btn" }, "← Zurück"); back.disabled = i === 0; back.onclick = () => go({ step: i - 1 });
+  const hb = h("button", { class: "btn ghost" }, "Hilfe 💡");
+  const next = h("button", { class: "btn primary" }, i < ch.steps.length - 1 ? "Weiter →" : "Kapitel abschließen ✓"); next.disabled = !solvedBefore;
+  const right = h("div", { class: "row" }); right.append(hb, next); navrow.append(back, right); m.append(navrow);
+  const markSolved = () => { if (P.ch[k] <= i) { P.ch[k] = i + 1; update(); } next.disabled = false; dots.children[i].classList.add("done"); };
+  const ctx = { el: stage,
+    solved: (msg) => { fbx.className = "fb ok"; fbx.innerHTML = "✓ " + (msg || praise()); markSolved(); },
+    hint: (msg) => { fbx.className = "fb try"; fbx.innerHTML = msg; } };
+  let hi = 0; const hints = st.hints || [];
+  hb.onclick = () => {
+    if (hi < hints.length) { help.append(h("p", {}, "💡 " + hints[hi])); hi++; }
+    if (hi >= hints.length) hb.disabled = true;
+  };
+  if (!hints.length) hb.style.visibility = "hidden";
+  next.onclick = () => { if (i < ch.steps.length - 1) go({ step: i + 1 }); else go({ page: "merkdone" }); };
+  st.w(ctx);
+  if (solvedBefore) { fbx.className = "fb ok"; fbx.textContent = "✓ Diesen Schritt hast du schon geschafft."; }
+}
+function renderMerkDone(m) {
+  const k = view.k;
+  m.append(h("h2", {}, `🎉 Kapitel ${k + 1} geschafft!`));
+  m.append(h("p", {}, "Das Wichtigste in Kürze:"));
+  m.append(h("div", { class: "merk" }, `<h3>${CH[k].title}</h3>${CH[k].merk}`));
+  const row = h("div", { class: "row", style: "margin-top:14px" });
+  const nk = [0, 1, 2, 3].find((x) => x > k && !chDone(x));
+  const b = h("button", { class: "btn primary big" }, nk !== undefined ? `Weiter mit Kapitel ${nk + 1}` : "Zum Abschluss-Check");
+  b.onclick = () => nk !== undefined ? openChapter(nk) : go({ page: "fin" });
+  row.append(b); m.append(row);
+}
+
+// ---------- Abschluss-Check (ohne Lösungen) ----------
+let fin = null, finIdx = 0, finAns = [];
+function renderFinal(m) {
+  if (!unlocked(4)) { m.append(h("p", {}, "Der Abschluss-Check öffnet sich, sobald du Kapitel 4 geschafft hast.")); return; }
+  if (!fin || view.restart) { fin = makeFinal(); finIdx = 0; finAns = []; view.restart = false; }
+  if (finIdx >= fin.length) return renderFinalResult(m);
+  const q = fin[finIdx];
+  m.append(h("div", { class: "chhead" }, `<h2>Abschluss-Check</h2><span class="muted">Frage ${finIdx + 1} von ${fin.length}</span>`));
+  m.append(h("p", { class: "muted" }, "Jetzt ohne Hilfe – zeig, was du kannst."));
+  m.append(h("p", { class: "big" }, q.q));
+  const row = h("div", { class: "row" }); let get;
+  const nb = h("button", { class: "btn primary" }, finIdx < fin.length - 1 ? "Weiter" : "Auswerten");
+  if (q.choice) { const box = h("div", { class: "row" }); let val = ""; q.choice.forEach((n) => { const b = h("button", { class: "opt" }, n); b.onclick = () => { val = n; box.querySelectorAll(".opt").forEach((x) => x.classList.toggle("right", x === b)); }; box.append(b); }); row.append(box); get = () => val; }
+  else { const inp = h("input", { class: "ans", "aria-label": "Antwort", autocomplete: "off" }); row.append(inp); get = () => clean(inp.value); setTimeout(() => inp.focus({ preventScroll: true }), 50);
+    inp.addEventListener("keydown", (e) => { if (e.key === "Enter") nb.click(); }); }
+  nb.onclick = () => { finAns[finIdx] = get(); finIdx++; render(); };
+  const nrow = h("div", { class: "row", style: "margin-top:12px" }); nrow.append(nb);
+  m.append(row, nrow);
+}
+function renderFinalResult(m) {
+  const norm = (q, a) => q.choice ? a : q.pad ? (a || "").padStart(q.pad, "0") : strip0(a || "");
+  const ok = fin.map((q, i) => norm(q, finAns[i]) === q.a), sc = ok.filter(Boolean).length;
+  P.fin = true; P.finScore = Math.max(P.finScore, sc); update();
+  const n = fin.length;
+  m.append(h("h2", {}, "Auswertung"));
+  const lead = sc === n ? `Alle ${n} richtig – stark!` : sc >= n / 2 ? `${sc} von ${n} richtig – gut gemacht!` : `${sc} von ${n} richtig. Bei den markierten Aufgaben lohnt sich ein zweiter Blick ins Kapitel.`;
+  m.append(h("p", { class: "big" }, lead));
+  fin.forEach((q, i) => m.append(h("div", { class: "box" }, `${ok[i] ? "✓" : "↻"} ${q.q}${ok[i] ? "" : `<br><span class="muted">Dazu passt Kapitel ${q.ch + 1}</span>`}`)));
+  const row = h("div", { class: "row", style: "margin-top:14px" });
+  const r = h("button", { class: "btn primary big" }, "Weiter"); r.onclick = () => go({ page: "reward" });
+  const a = h("button", { class: "btn" }, "Noch einmal mit neuen Aufgaben"); a.onclick = () => go({ page: "fin", restart: true });
+  row.append(r, a); m.append(row);
+}
+
+// ---------- Belohnung ----------
+function renderReward(m) {
+  if (!unlocked(5)) { m.append(h("p", {}, "Hier gibt es noch nichts zu sehen.")); return; }
+  m.append(h("h2", {}, "🎉 Geschafft!"));
+  m.append(h("p", {}, "Du bist durch den ganzen Lernpfad gekommen. Such dir ein Spiel aus, mit dem du weiterüben willst – es öffnet sich in einem neuen Tab."));
+  const g = h("div", { class: "games" });
+  GAMES.forEach(([n, u, d, t, l]) => g.append(h("div", { class: "game" }, `<a href="${u}" target="_blank" rel="noopener noreferrer">${n} ↗</a><div style="margin:4px 0"><span class="tag">${t}</span><span class="tag">${l}</span></div><div class="muted">${d}</div>`)));
+  m.append(g);
+}
+
+// ---------- Kopf ----------
+$("btnSave").onclick = () => { $("codeOut").textContent = encode(); $("dlgSave").showModal(); };
+document.querySelectorAll("[data-close]").forEach((b) => b.onclick = () => b.closest("dialog").close());
+
+// ---------- Start ----------
+try { const s = localStorage.getItem("binhex-lernpfad3"); const st = s && decode(s); if (st) Object.assign(P, st); } catch (e) { /* kein Speicher */ }
+render();
+</script>
+</body>
+</html>
