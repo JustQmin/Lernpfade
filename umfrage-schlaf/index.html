@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Umfrage Psychologie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap">
+<style>
+  :root { --acc: #005A8D; --acc-d: #004A75; --txt: #1A1A1A; --muted: #5E5E5E; --line: #CFCFCF; --bg: #ffffff; --card: #F7F7F5; --merke: #FFFDF7; --merkeb: #D8B24A; --err: #A42A00; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Lexend', system-ui, sans-serif; color: var(--txt); background: var(--bg); font-size: 18px; line-height: 1.5; }
+  main { max-width: 640px; margin: 0 auto; padding: 28px 18px 56px; }
+  h1 { font-size: 28px; line-height: 1.2; margin: 0; }
+  .bar { width: 64px; height: 3px; background: var(--acc); border-radius: 2px; margin: 12px 0 22px; }
+  .intro { background: var(--merke); border-left: 4px solid var(--merkeb); padding: 16px 18px; margin-bottom: 26px; }
+  .intro p { margin: 0 0 10px; }
+  .intro p:last-child { margin: 0; }
+  .q { margin: 0 0 26px; padding: 0; border: 0; }
+  .q legend, .q label.ql { display: block; font-weight: 600; margin-bottom: 10px; padding: 0; }
+  .q .hint { display: block; font-size: 15px; color: var(--muted); margin: -4px 0 10px; font-weight: 400; }
+  .num { display: flex; align-items: center; gap: 10px; }
+  input[type=number], select { font: inherit; font-size: 18px; color: var(--txt); background: #fff; border: 1.5px solid var(--line); border-radius: 10px; min-height: 52px; padding: 10px 14px; }
+  input[type=number] { width: 130px; }
+  select { width: 100%; max-width: 260px; appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23005A8D' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; }
+  input:focus-visible, select:focus-visible { outline: 3px solid var(--acc); outline-offset: 1px; border-color: var(--acc); }
+  .scale { display: grid; grid-template-columns: repeat(9, 1fr); gap: 5px; }
+  .scale input { position: absolute; opacity: 0; pointer-events: none; }
+  .scale label { display: flex; align-items: center; justify-content: center; min-height: 48px; border: 1.5px solid var(--line); border-radius: 10px; font-weight: 600; cursor: pointer; user-select: none; }
+  .scale input:checked + label { background: var(--acc); border-color: var(--acc); color: #fff; }
+  .scale input:focus-visible + label { outline: 3px solid var(--acc); outline-offset: 2px; }
+  .anchors { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .anchors span:last-child { text-align: right; }
+  button { font: inherit; font-weight: 600; font-size: 18px; color: #fff; background: var(--acc); border: 0; border-radius: 10px; min-height: 54px; padding: 12px 28px; cursor: pointer; width: 100%; }
+  button:hover { background: var(--acc-d); }
+  button:disabled { opacity: .6; cursor: default; }
+  button:focus-visible { outline: 3px solid var(--merkeb); outline-offset: 2px; }
+  .msg { color: var(--err); font-size: 15px; margin-top: 12px; min-height: 1em; }
+  .done { text-align: left; }
+  .done h2 { font-size: 24px; margin: 0 0 10px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Umfrage Psychologie</h1>
+  <div class="bar"></div>
+
+  <section id="formView">
+    <div class="intro">
+      <p>Diese kurze Umfrage gehört zu einem Unterrichtsprojekt im Fach Psychologie und dauert etwa zwei Minuten.</p>
+      <p>Die Teilnahme ist freiwillig und anonym. Du kannst einzelne Fragen auslassen und jederzeit abbrechen.</p>
+      <p><strong>Gemeint ist bei allen Fragen ein ganz normaler Tag unter der Woche</strong> – außer bei der letzten Frage.</p>
+    </div>
+
+    <form id="survey" novalidate>
+      <div class="q">
+        <label class="ql" for="alter">Wie alt bist du?</label>
+        <div class="num"><input id="alter" name="alter" type="number" inputmode="numeric" step="1"><span>Jahre</span></div>
+      </div>
+
+      <div class="q">
+        <label class="ql" for="einschlafen">Um wie viel Uhr schläfst du unter der Woche ungefähr ein?</label>
+        <select id="einschlafen" name="einschlafen" data-from="19:00" data-to="04:00"></select>
+      </div>
+
+      <div class="q">
+        <label class="ql" for="aufwachen">Um wie viel Uhr wachst du unter der Woche ungefähr auf?</label>
+        <select id="aufwachen" name="aufwachen" data-from="03:00" data-to="12:00"></select>
+      </div>
+
+      <div class="q">
+        <label class="ql" for="minuten">Wie viele Minuten nutzt du unter der Woche ungefähr dein Handy, nachdem du dich ins Bett gelegt hast?</label>
+        <span class="hint">Schätze ungefähr. Wenn du es gar nicht nutzt, trage 0 ein.</span>
+        <div class="num"><input id="minuten" name="minuten" type="number" inputmode="numeric" step="1"><span>Minuten</span></div>
+      </div>
+
+      <fieldset class="q">
+        <legend>Wie müde bist du unter der Woche normalerweise am Vormittag?</legend>
+        <div class="scale" id="scale"></div>
+        <div class="anchors" aria-hidden="true"><span>1 = äußerst wach</span><span>9 = sehr müde, ich kämpfe gegen den Schlaf</span></div>
+      </fieldset>
+
+      <div class="q">
+        <label class="ql" for="wochenende">Um wie viel Uhr schläfst du am Wochenende ungefähr ein, wenn du am nächsten Tag ausschlafen kannst?</label>
+        <select id="wochenende" name="wochenende" data-from="19:00" data-to="07:00"></select>
+      </div>
+
+      <button type="submit" id="send">Absenden</button>
+      <div class="msg" id="msg" role="alert"></div>
+    </form>
+  </section>
+
+  <section id="doneView" class="done hidden">
+    <h2>Danke fürs Mitmachen!</h2>
+    <p>Deine Antworten wurden gespeichert. Du kannst die Seite jetzt schließen.</p>
+  </section>
+
+  <section id="againView" class="done hidden">
+    <h2>Du hast schon teilgenommen</h2>
+    <p>Auf diesem Gerät wurde die Umfrage bereits abgeschickt. Danke!</p>
+  </section>
+</main>
+
+<script>
+  // Google-Formular als Speicher (Antworten landen in der verknüpften Tabelle)
+  const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSc8AFB5BpCQwchHJ17PhxvaFP6MjnaeTiQaFBdg3AGtTAkOyw/formResponse";
+  const FIELDS = {
+    alter: "entry.43975838",
+    einschlafen: "entry.1843804943",
+    aufwachen: "entry.977575040",
+    minuten: "entry.92081036",
+    muede: "entry.165475276",
+    wochenende: "entry.903480210",
+  };
+  const DONE_KEY = "umfrage-schlaf-abgeschickt";
+
+  function safeGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function safeSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function show(id) { ["formView", "doneView", "againView"].forEach(v => document.getElementById(v).classList.toggle("hidden", v !== id)); }
+
+  // Uhrzeit-Auswahl in 15-Minuten-Schritten (über Mitternacht hinweg)
+  function toMin(t) { const [h, m] = t.split(":").map(Number); return h * 60 + m; }
+  function fmt(min) { min = ((min % 1440) + 1440) % 1440; return String(Math.floor(min / 60)).padStart(2, "0") + ":" + String(min % 60).padStart(2, "0"); }
+  document.querySelectorAll("select[data-from]").forEach(sel => {
+    let start = toMin(sel.dataset.from), end = toMin(sel.dataset.to);
+    if (end <= start) end += 1440;
+    sel.add(new Option("– bitte wählen –", ""));
+    for (let m = start; m <= end; m += 15) sel.add(new Option(fmt(m) + " Uhr", fmt(m)));
+  });
+
+  // Müdigkeitsskala 1–9
+  const scale = document.getElementById("scale");
+  for (let i = 1; i <= 9; i++) {
+    const id = "m" + i;
+    scale.insertAdjacentHTML("beforeend",
+      `<input type="radio" name="muede" id="${id}" value="${i}"><label for="${id}" aria-label="${i}${i === 1 ? ' – äußerst wach' : i === 9 ? ' – sehr müde' : ''}">${i}</label>`);
+  }
+
+  if (safeGet(DONE_KEY)) show("againView");
+
+  document.getElementById("survey").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const f = e.target, msg = document.getElementById("msg"), btn = document.getElementById("send");
+    const values = {
+      alter: f.alter.value.trim(),
+      einschlafen: f.einschlafen.value,
+      aufwachen: f.aufwachen.value,
+      minuten: f.minuten.value.trim(),
+      muede: (f.querySelector("input[name=muede]:checked") || {}).value || "",
+      wochenende: f.wochenende.value,
+    };
+    if (Object.values(values).every(v => v === "")) { msg.textContent = "Du hast noch keine Frage beantwortet."; return; }
+    msg.textContent = "";
+
+    const data = new URLSearchParams();
+    for (const key of ["alter", "minuten", "muede"]) if (values[key] !== "") data.append(FIELDS[key], values[key]);
+    for (const key of ["einschlafen", "aufwachen", "wochenende"]) {
+      if (values[key] === "") continue;
+      const [h, m] = values[key].split(":");
+      data.append(FIELDS[key] + "_hour", h);
+      data.append(FIELDS[key] + "_minute", m);
+    }
+    data.append("pageHistory", "0,1");
+
+    btn.disabled = true; btn.textContent = "Wird gesendet …";
+    try {
+      await fetch(FORM_URL, { method: "POST", mode: "no-cors", body: data });
+      safeSet(DONE_KEY, "1");
+      show("doneView");
+      window.scrollTo(0, 0);
+    } catch (err) {
+      msg.textContent = "Das Senden hat nicht geklappt. Prüfe deine Internetverbindung und versuche es noch einmal.";
+      btn.disabled = false; btn.textContent = "Absenden";
+    }
+  });
+</script>
+</body>
+</html>
