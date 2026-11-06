@@ -31,6 +31,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download-Ordner vorbereiten (Dateiliste und ZIP)
+        run: |
+          mkdir -p download
+          python3 - <<'PY'
+          import json, os, subprocess, datetime
+          root = 'download'
+          skip = {'index.html', 'files.json', 'alles.zip', '.gitkeep'}
+          files = []
+          for d, _, names in os.walk(root):
+              for n in names:
+                  p = os.path.join(d, n)
+                  rel = os.path.relpath(p, root)
+                  if rel in skip or n.startswith('.'):
+                      continue
+                  date = subprocess.run(['git', 'log', '-1', '--format=%cI', '--', p],
+                                        capture_output=True, text=True).stdout.strip()
+                  files.append({'name': rel, 'size': os.path.getsize(p), 'date': date})
+          built = datetime.datetime.now(datetime.timezone.utc).isoformat()
+          json.dump({'built': built, 'files': files}, open(os.path.join(root, 'files.json'), 'w'), ensure_ascii=False)
+          PY
+          cd download
+          rm -f alles.zip
+          zip -q -r alles.zip . -x index.html files.json '.*' || true
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
