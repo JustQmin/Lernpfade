@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Downloads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap">
+<style>
+  :root { --acc: #005A8D; --acc2: #A44400; --txt: #1A1A1A; --muted: #5E5E5E; --line: #E4E4E4; --bg: #ffffff; --merke: #FFFDF7; --merkeb: #D8B24A; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Lexend', system-ui, sans-serif; color: var(--txt); background: var(--bg); font-size: 18px; line-height: 1.55; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 30px; line-height: 1.2; margin: 0 0 6px; }
+  .fach { color: var(--acc); font-weight: 700; font-size: 15px; }
+  .bar { width: 64px; height: 3px; background: var(--acc); border-radius: 2px; margin: 10px 0 24px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 18px; border-radius: 10px; background: var(--acc); color: #fff; text-decoration: none; font-weight: 600; border: 0; font: inherit; font-weight: 600; cursor: pointer; }
+  .btn.sec { background: #fff; color: var(--acc); border: 2px solid var(--acc); min-height: 44px; padding: 8px 14px; }
+  .btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+  .btn:focus-visible { outline: 3px solid var(--acc2); outline-offset: 2px; }
+  .top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 24px; }
+  .hint { color: var(--muted); font-size: 15px; }
+  ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  li { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .name { font-weight: 600; word-break: break-word; }
+  .meta { color: var(--muted); font-size: 14px; }
+  .acts { display: flex; gap: 8px; }
+  .empty { background: var(--merke); border-left: 4px solid var(--merkeb); padding: 16px 20px; }
+  footer { margin-top: 48px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; color: #8A8A8A; }
+</style>
+</head>
+<body>
+<main>
+  <div class="fach">Waibel</div>
+  <h1>Downloads</h1>
+  <div class="bar"></div>
+  <div class="top" id="top" hidden>
+    <a class="btn" id="zip" href="alles.zip" download>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+      Alles als ZIP herunterladen
+    </a>
+    <span class="hint" id="count"></span>
+  </div>
+  <ul id="list"></ul>
+  <div class="empty" id="empty" hidden>Gerade sind keine Dateien bereitgestellt.</div>
+  <footer>Waibel</footer>
+</main>
+<script>
+const DL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>';
+const kb=n=>n<1048576?Math.max(1,Math.round(n/1024))+' KB':(n/1048576).toFixed(1).replace('.',',')+' MB';
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const enc=p=>p.split('/').map(encodeURIComponent).join('/');
+function show(files,stamp){
+  const list=document.getElementById('list');
+  if(!files.length){ document.getElementById('empty').hidden=false; return; }
+  files.sort((a,b)=>(b.date||'').localeCompare(a.date||'')||a.name.localeCompare(b.name,'de'));
+  list.innerHTML=files.map(f=>{
+    const href=enc(f.name)+'?v='+encodeURIComponent(f.date||stamp);
+    const d=f.date?new Date(f.date).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'}):'';
+    return `<li><div><div class="name">${esc(f.name)}</div><div class="meta">${kb(f.size)}${d?' · '+d:''}</div></div>
+      <div class="acts"><a class="btn sec" href="${href}" download>${DL}Herunterladen</a></div></li>`;
+  }).join('');
+  const top=document.getElementById('top'); top.hidden=false;
+  document.getElementById('zip').href='alles.zip?v='+encodeURIComponent(stamp);
+  document.getElementById('count').textContent=files.length===1?'1 Datei':files.length+' Dateien';
+}
+fetch('files.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>show(j.files||[],j.built||'')).catch(()=>{document.getElementById('empty').hidden=false;});
+</script>
+</body>
+</html>
