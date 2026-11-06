@@ -33,13 +33,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Download-Ordner vorbereiten (Dateiliste und ZIP)
+      - name: Download-Ordner vorbereiten (Dateiliste)
         run: |
           mkdir -p download
           python3 - <<'PY'
           import json, os, subprocess, datetime
           root = 'download'
-          skip = {'index.html', 'files.json', 'alles.zip', '.gitkeep'}
+          skip = {'index.html', 'files.json'}
           files = []
           for d, _, names in os.walk(root):
               for n in names:
@@ -53,9 +53,6 @@ jobs:
           built = datetime.datetime.now(datetime.timezone.utc).isoformat()
           json.dump({'built': built, 'files': files}, open(os.path.join(root, 'files.json'), 'w'), ensure_ascii=False)
           PY
-          cd download
-          rm -f alles.zip
-          zip -q -r alles.zip . -x index.html files.json '.*' || true
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
