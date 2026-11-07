@@ -70,6 +70,8 @@
   label.chk input { width: 22px; height: 22px; accent-color: var(--acc); }
   .btn { border: 2px solid var(--acc); background: #fff; color: var(--acc); font: inherit; font-size: 15px; font-weight: 600; border-radius: 10px; padding: 6px 14px; min-height: 42px; cursor: pointer; }
   .btn.fill { background: var(--acc); color: #fff; }
+  .pick { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-bottom: 14px; }
+  select { font: inherit; font-size: 16px; padding: 8px 10px; min-height: 44px; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; color: var(--txt); }
   .bigr { font-size: 34px; font-weight: 700; font-variant-numeric: tabular-nums; }
   .muted { color: var(--muted); font-size: 15px; }
 
@@ -96,9 +98,9 @@
   .outlist .why { color: var(--acc2); }
 
   .corr { border-collapse: separate; border-spacing: 3px; width: auto; margin: 0 auto; }
-  .corr th { font-size: 12px; white-space: normal; width: 50px; line-height: 1.2; vertical-align: bottom; border: none; padding: 2px; text-align: center; font-weight: 600; }
-  .corr th.rowh { text-align: right; vertical-align: middle; width: 120px; }
-  .corr td { width: 50px; height: 42px; text-align: center; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
+  .corr th { font-size: 13px; white-space: normal; width: 76px; line-height: 1.2; vertical-align: bottom; border: none; padding: 2px; text-align: center; font-weight: 600; }
+  .corr th.rowh { text-align: right; vertical-align: middle; width: 150px; }
+  .corr td { width: 76px; height: 52px; text-align: center; font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
   .corr td.diag { cursor: default; background: #FAFAFA; color: #C0C0C0; }
   .corr td.sel { outline: 3px solid var(--txt); outline-offset: 1px; }
   .legendbar { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; font-size: 13px; color: var(--muted); }
@@ -145,6 +147,7 @@
       <button class="tab" role="tab" data-tab="bereinigen">Bereinigen</button>
       <button class="tab" role="tab" data-tab="verteilung">Verteilung</button>
       <button class="tab" role="tab" data-tab="zusammenhang">Zusammenhang</button>
+      <button class="tab" role="tab" data-tab="korrelogramm">Korrelogramm</button>
       <button class="tab sep" role="tab" data-tab="fragebogen">Fragebogen</button>
     </div>
     <div class="controls">
@@ -164,14 +167,26 @@
     <div class="card">
       <div class="cardhead">
         <h2>Alle Antworten</h2>
-        <div class="chips" id="tlSort"></div>
+        <div class="seg" role="group" aria-label="Ansicht">
+          <button type="button" data-view="table">Tabelle</button>
+          <button type="button" data-view="timeline">Zeitleiste</button>
+        </div>
       </div>
-      <div class="legend" style="margin-bottom:8px">
-        <span><span class="sw" style="background:var(--acc2)"></span>Handy im Bett</span>
-        <span><span class="sw" style="background:var(--acc)"></span>Schlaf (Mo–Fr)</span>
-        <span><span class="ring"></span>Einschlafen am Wochenende</span>
+      <div id="viewTable">
+        <div class="scroll"><table class="raw" id="rawTable"></table></div>
+        <p class="muted" style="margin:8px 0 0">Spaltenkopf antippen zum Sortieren · Haken entfernen zum Ausschließen · * berechnet</p>
       </div>
-      <div id="timeline" class="tl"></div>
+      <div id="viewTimeline" hidden>
+        <div class="cardhead" style="margin-bottom:6px">
+          <div class="legend">
+            <span><span class="sw" style="background:var(--acc2)"></span>Handy im Bett</span>
+            <span><span class="sw" style="background:var(--acc)"></span>Schlaf (Mo–Fr)</span>
+            <span><span class="ring"></span>Einschlafen am Wochenende</span>
+          </div>
+          <div class="chips" id="tlSort"></div>
+        </div>
+        <div id="timeline" class="tl"></div>
+      </div>
     </div>
   </section>
 
@@ -187,10 +202,6 @@
         <div class="cardhead"><h2 id="outHead">Ausgeschlossen</h2></div>
         <ul class="outlist" id="outList"></ul>
       </div>
-    </div>
-    <div class="card">
-      <div class="cardhead"><h2>Tabelle</h2><span class="muted">Spaltenkopf antippen zum Sortieren · Haken entfernen zum Ausschließen</span></div>
-      <div class="scroll"><table class="raw" id="rawTable"></table></div>
     </div>
   </section>
 
@@ -224,23 +235,25 @@
 
   <!-- ZUSAMMENHANG -->
   <section class="panel" id="p-zusammenhang" hidden>
-    <div>
+    <div class="pick">
+      <label for="xVar" class="clbl">x-Achse</label><select id="xVar"></select>
+      <button type="button" class="btn" id="swap" aria-label="Achsen tauschen">⇄</button>
+      <label for="yVar" class="clbl">y-Achse</label><select id="yVar"></select>
+    </div>
+    <div class="grid2 wide">
       <div class="card">
-        <div class="cardhead"><h2>Zwei Merkmale wählen</h2></div>
-        <div class="scroll"><table class="corr" id="corrTable"></table></div>
-        <div class="legendbar"><span>r = −1</span><span class="grad"></span><span>+1</span></div>
-      </div>
-      <div class="card" id="scatterCard">
-        <div class="cardhead">
-          <div><div class="muted" id="pairName"></div><div class="bigr" id="rVal"></div></div>
-          <button type="button" class="btn" id="swap">Achsen tauschen</button>
-        </div>
         <div id="scatter"></div>
         <div class="toggles">
           <label class="chk"><input type="checkbox" id="showFit"> Trendlinie</label>
           <label class="chk"><input type="checkbox" id="jitter" checked> Punkte auseinanderziehen</label>
         </div>
-        <div id="pairQ" style="margin-top:10px"></div>
+      </div>
+      <div class="card">
+        <h2>Zusammenhang</h2>
+        <div class="muted" id="pairName" style="margin-top:4px"></div>
+        <div class="bigr" id="rVal"></div>
+        <div class="muted" id="pairN" style="margin-bottom:12px"></div>
+        <div id="pairQ"></div>
         <details class="help">
           <summary>Was bedeutet r?</summary>
           <ul>
@@ -251,6 +264,15 @@
           </ul>
         </details>
       </div>
+    </div>
+  </section>
+
+  <!-- KORRELOGRAMM -->
+  <section class="panel" id="p-korrelogramm" hidden>
+    <div class="card">
+      <div class="cardhead"><h2>Korrelogramm</h2><span class="muted">Zelle antippen öffnet das Streudiagramm</span></div>
+      <div class="scroll"><table class="corr" id="corrTable"></table></div>
+      <div class="legendbar"><span>r = −1</span><span class="grad"></span><span>+1</span></div>
     </div>
   </section>
 
@@ -288,7 +310,7 @@ const STORE = "datenboard-schlaf-v2";
 
 let RAW = [], DS = null;
 const state = {
-  mode: "raw", ages: null, tab: "daten", tsort: "idx",
+  mode: "raw", ages: null, tab: "daten", tsort: "idx", view: "table",
   distVar: "minuten", normal: false,
   x: "minuten", y: "schlafdauer", fit: false, jitter: true,
   rules: {}, complete: false, excluded: new Set(),
@@ -487,7 +509,7 @@ function rulesUI() {
   let h = `<span class="h">Merkmal</span><span class="h">mindestens</span><span class="h">höchstens</span>`;
   RULE_VARS.forEach(k => {
     const r = state.rules[k] || {}, u = VARS[k].unit;
-    h += `<span>${VARS[k].label}<br><span class="u">in ${u}</span></span>
+    h += `<span>${VARS[k].label}<br><span class="u">in ${u === "Jahre" ? "Jahren" : u}</span></span>
       <input type="number" inputmode="decimal" step="any" data-rule="${k}" data-b="min" value="${r.min ?? ""}" placeholder="–" aria-label="${VARS[k].label} mindestens">
       <input type="number" inputmode="decimal" step="any" data-rule="${k}" data-b="max" value="${r.max ?? ""}" placeholder="–" aria-label="${VARS[k].label} höchstens">`;
   });
@@ -511,7 +533,7 @@ function rawTable() {
       ${KEYS.map(k => `<td class="r ${r[k] == null ? "miss" : ""}">${r[k] == null ? "–" : fmt(k, r[k]).replace(" Uhr", "").replace(" Jahre", "")}</td>`).join("")}
       <td class="why">${why || ""}</td></tr>`;
   });
-  document.getElementById("rawTable").innerHTML = h + `<tr><td colspan="${COLS.length + 2}" class="muted" style="border:none">* berechnet</td></tr>`;
+  document.getElementById("rawTable").innerHTML = h;
 }
 
 /* ---------- VERTEILUNG ---------- */
@@ -602,7 +624,8 @@ function hash(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { 
 function scatter(rows) {
   const kx = state.x, ky = state.y, el = document.getElementById("scatter");
   const p = pairs(rows, kx, ky), c = pearson(rows, kx, ky);
-  document.getElementById("pairName").textContent = `${VARS[kx].label} × ${VARS[ky].label} · n = ${c.n}`;
+  document.getElementById("pairName").textContent = `${VARS[kx].label} und ${VARS[ky].label}`;
+  document.getElementById("pairN").textContent = `n = ${c.n} Antworten mit beiden Werten`;
   document.getElementById("rVal").textContent = "r = " + (c.r == null ? "–" : sign(c.r));
   document.getElementById("pairQ").innerHTML = qbox(kx, "x") + qbox(ky, "y");
   if (p.length < 2) { el.innerHTML = `<p class="muted">Zu wenige Werte für ein Streudiagramm.</p>`; return; }
@@ -662,12 +685,20 @@ function renderPanel() {
   document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.tab === state.tab));
   document.querySelectorAll(".panel").forEach(p => p.hidden = p.id !== "p-" + state.tab);
   const rows = active();
-  if (state.tab === "daten") { tiles(); timeline(); }
-  if (state.tab === "bereinigen") { outList(); rawTable(); }
+  if (state.tab === "daten") {
+    tiles();
+    document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", b.dataset.view === state.view));
+    document.getElementById("viewTable").hidden = state.view !== "table";
+    document.getElementById("viewTimeline").hidden = state.view !== "timeline";
+    state.view === "table" ? rawTable() : timeline();
+  }
+  if (state.tab === "bereinigen") outList();
   if (state.tab === "verteilung") { distChips(); histogram(state.distVar, rows); allStats(rows); }
-  if (state.tab === "zusammenhang") { corrTable(rows); scatter(rows); }
+  if (state.tab === "zusammenhang") { fillSelect("xVar", state.x); fillSelect("yVar", state.y); scatter(rows); }
+  if (state.tab === "korrelogramm") corrTable(rows);
 }
 function render() { ageChips(); renderStatus(); renderPanel(); }
+function fillSelect(id, val) { document.getElementById(id).innerHTML = KEYS.map(k => `<option value="${k}" ${k === val ? "selected" : ""}>${VARS[k].label}</option>`).join(""); }
 
 document.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => { state.mode = b.dataset.mode; save(); render(); });
 document.getElementById("ageChips").onclick = e => {
@@ -681,16 +712,19 @@ document.addEventListener("click", e => {
   const row = e.target.closest("[data-row]"); if (row && !dlg.open) { openDetail(row.dataset.row); return; }
   const ts = e.target.closest("[data-tsort]"); if (ts) { state.tsort = ts.dataset.tsort; timeline(); return; }
   const dv = e.target.closest("[data-dist]"); if (dv) { state.distVar = dv.dataset.dist; renderPanel(); return; }
-  const td = e.target.closest("#corrTable td[data-x]"); if (td) { state.x = td.dataset.x; state.y = td.dataset.y; tip.style.display = "none"; renderPanel(); document.getElementById("scatterCard").scrollIntoView({ behavior: "smooth", block: "center" }); }
+  const vw = e.target.closest("[data-view]"); if (vw) { state.view = vw.dataset.view; renderPanel(); return; }
+  const td = e.target.closest("#corrTable td[data-x]"); if (td) { state.x = td.dataset.x; state.y = td.dataset.y; tip.style.display = "none"; state.tab = "zusammenhang"; history.replaceState(null, "", "#zusammenhang"); renderPanel(); scrollTo({ top: 0 }); }
 });
 document.getElementById("showNormal").onchange = e => { state.normal = e.target.checked; renderPanel(); };
 document.getElementById("showFit").onchange = e => { state.fit = e.target.checked; renderPanel(); };
 document.getElementById("jitter").onchange = e => { state.jitter = e.target.checked; renderPanel(); };
+document.getElementById("xVar").onchange = e => { state.x = e.target.value; renderPanel(); };
+document.getElementById("yVar").onchange = e => { state.y = e.target.value; renderPanel(); };
 document.getElementById("swap").onclick = () => { [state.x, state.y] = [state.y, state.x]; renderPanel(); };
 document.getElementById("rules").oninput = e => {
   const i = e.target.closest("[data-rule]"); if (!i) return;
   const r = state.rules[i.dataset.rule] = state.rules[i.dataset.rule] || {};
-  r[i.dataset.b] = num(i.value); save(); ageChips(); renderStatus(); outList(); rawTable();
+  r[i.dataset.b] = num(i.value); save(); ageChips(); renderStatus(); outList();
 };
 document.getElementById("complete").onchange = e => { state.complete = e.target.checked; save(); render(); };
 document.getElementById("resetRules").onclick = () => { state.rules = {}; state.complete = false; state.excluded.clear(); save(); rulesUI(); render(); };
@@ -700,7 +734,7 @@ document.getElementById("rawTable").onclick = e => {
 };
 document.getElementById("rawTable").onchange = e => {
   const c = e.target.closest("input[data-id]"); if (!c) return;
-  c.checked ? state.excluded.delete(c.dataset.id) : state.excluded.add(c.dataset.id); save(); ageChips(); renderStatus(); outList(); rawTable();
+  c.checked ? state.excluded.delete(c.dataset.id) : state.excluded.add(c.dataset.id); save(); ageChips(); renderStatus(); tiles(); rawTable();
 };
 
 function load() {
@@ -722,7 +756,7 @@ restore();
 rulesUI();
 questions();
 const h0 = location.hash.slice(1);
-if (["daten", "bereinigen", "verteilung", "zusammenhang", "fragebogen"].includes(h0)) state.tab = h0;
+if (["daten", "bereinigen", "verteilung", "zusammenhang", "korrelogramm", "fragebogen"].includes(h0)) state.tab = h0;
 load();
 </script>
 </body>
