@@ -8,205 +8,262 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap">
 <style>
-  :root { --acc: #005A8D; --acc2: #A44400; --txt: #1A1A1A; --muted: #5E5E5E; --line: #CFCFCF; --grid: #E8E8E8; --bg: #ffffff; --card: #F7F7F5; --merke: #FFFDF7; --merkeb: #D8B24A; }
+  :root { --acc: #005A8D; --acc2: #A44400; --txt: #1A1A1A; --muted: #5E5E5E; --line: #D6D6D6; --grid: #EAEAEA; --bg: #ffffff; --card: #F6F6F3; --tint: #EAF1F6; --merke: #FFFDF7; --merkeb: #D8B24A; }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: 'Lexend', system-ui, sans-serif; color: var(--txt); background: var(--bg); font-size: 17px; line-height: 1.5; }
-  main { max-width: 1040px; margin: 0 auto; padding: 28px 16px 56px; }
-  h1 { font-size: 28px; line-height: 1.2; margin: 0; }
-  h2 { font-size: 21px; margin: 0 0 10px; }
-  h3 { font-size: 17px; margin: 0 0 8px; }
-  .bar { width: 64px; height: 3px; background: var(--acc); border-radius: 2px; margin: 10px 0 14px; }
-  .status { color: var(--muted); font-size: 15px; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; margin-bottom: 14px; }
-  .linkbtn { background: none; border: none; color: var(--acc); font: inherit; font-weight: 600; padding: 6px 0; cursor: pointer; }
-  .banner { background: var(--merke); border-left: 4px solid var(--merkeb); padding: 12px 16px; margin-bottom: 16px; font-size: 15px; }
-  details.info { background: var(--card); border-radius: 10px; padding: 10px 16px; margin-bottom: 16px; }
-  details.info summary { cursor: pointer; font-weight: 600; min-height: 32px; display: flex; align-items: center; }
-  details.info ul { margin: 6px 0 4px; padding-left: 20px; }
-  details.info li { margin-bottom: 4px; }
-  details.info p { margin: 6px 0; }
+  main { max-width: 1080px; margin: 0 auto; padding: 22px 16px 56px; }
+  h1 { font-size: 26px; line-height: 1.2; margin: 0; }
+  h2 { font-size: 19px; margin: 0; }
+  .sub { color: var(--muted); font-size: 15px; margin-top: 4px; }
+  .banner { background: var(--merke); border-left: 4px solid var(--merkeb); padding: 10px 14px; margin-top: 12px; font-size: 15px; }
+  .banner details summary { cursor: pointer; }
 
-  .controls { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--grid); padding: 10px 0; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
-  .seg { display: inline-flex; border: 2px solid var(--acc); border-radius: 10px; overflow: hidden; }
-  .seg button { border: none; background: #fff; color: var(--acc); font: inherit; font-weight: 600; padding: 8px 14px; min-height: 44px; cursor: pointer; }
-  .seg button[aria-pressed="true"] { background: var(--acc); color: #fff; }
-  .lbl { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  .chip { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 12px; min-height: 40px; font: inherit; font-size: 15px; cursor: pointer; color: var(--txt); }
-  .chip[aria-pressed="true"] { border-color: var(--acc); background: #E8F0F6; color: var(--acc); font-weight: 600; }
-  .ncount { margin-left: auto; font-weight: 600; }
-
-  .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 18px; }
-  .tab { border: none; background: var(--card); color: var(--txt); font: inherit; font-weight: 600; padding: 10px 16px; min-height: 48px; border-radius: 10px; cursor: pointer; }
+  /* Navigation */
+  nav { position: sticky; top: 0; z-index: 10; background: var(--bg); padding: 12px 0 10px; margin-top: 14px; border-bottom: 1px solid var(--grid); }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .tab { flex: 0 0 auto; border: none; background: var(--card); color: var(--txt); font: inherit; font-weight: 600; padding: 10px 18px; min-height: 48px; border-radius: 10px; cursor: pointer; }
   .tab[aria-selected="true"] { background: var(--acc); color: #fff; }
+  .tab.sep { margin-left: auto; background: #fff; border: 2px solid var(--line); }
+  .tab.sep[aria-selected="true"] { background: var(--acc); border-color: var(--acc); }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-top: 10px; }
+  .seg { display: inline-flex; border: 2px solid var(--acc); border-radius: 10px; overflow: hidden; }
+  .seg button { border: none; background: #fff; color: var(--acc); font: inherit; font-size: 15px; font-weight: 600; padding: 6px 12px; min-height: 40px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--acc); color: #fff; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .chip { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 5px 13px; min-height: 40px; font: inherit; font-size: 15px; cursor: pointer; color: var(--txt); }
+  .chip[aria-pressed="true"] { border-color: var(--acc); background: var(--tint); color: var(--acc); font-weight: 600; }
+  .clbl { font-size: 13px; font-weight: 700; color: var(--muted); }
+  .n { margin-left: auto; font-weight: 700; font-size: 18px; }
+
+  .panel { padding-top: 18px; }
   .panel[hidden] { display: none; }
+  .card { border: 1.5px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 16px; background: #fff; }
+  .cardhead { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .grid2 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 900px) { .grid2 { grid-template-columns: 1fr 1fr; } .grid2.wide { grid-template-columns: 2fr 1fr; } }
 
-  .card { border: 1.5px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-bottom: 18px; }
-  .row { display: grid; grid-template-columns: 1fr; gap: 18px; }
-  @media (min-width: 860px) { .row.two { grid-template-columns: 2.2fr 1fr; } }
-  .pick { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 10px; }
-  select { font: inherit; font-size: 16px; padding: 8px 10px; min-height: 44px; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; color: var(--txt); }
-  label.chk { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; cursor: pointer; }
-  label.chk input { width: 22px; height: 22px; accent-color: var(--acc); }
-  .big { font-size: 22px; font-weight: 700; }
-  .muted { color: var(--muted); font-size: 15px; }
+  /* Kennzahlen */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .tile { background: var(--card); border-radius: 14px; padding: 12px 16px; }
+  .tile .v { font-size: 28px; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+  .tile .l { font-size: 14px; color: var(--muted); }
 
-  svg { display: block; width: 100%; height: auto; font-family: 'Lexend', system-ui, sans-serif; touch-action: manipulation; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--muted); align-items: center; }
+  .sw { display: inline-block; width: 22px; height: 10px; border-radius: 3px; vertical-align: middle; margin-right: 6px; }
+  .ring { display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--txt); background: #fff; vertical-align: middle; margin-right: 6px; }
+
+  /* Frage-Kästen */
+  .qbox { background: var(--tint); border-radius: 10px; padding: 10px 14px; font-size: 15px; margin: 0 0 12px; }
+  .qbox .qn { display: inline-block; font-size: 12px; font-weight: 700; color: #fff; background: var(--acc); border-radius: 6px; padding: 1px 8px; margin-right: 8px; vertical-align: 1px; }
+  .qbox.calc { background: var(--card); }
+  .qbox.calc .qn { background: var(--muted); }
+  .qbox .ax { font-weight: 700; color: var(--acc); margin-right: 6px; }
+
+  svg { display: block; width: 100%; height: auto; font-family: 'Lexend', system-ui, sans-serif; }
   svg text { fill: var(--muted); font-size: 13px; }
   svg .ttl { fill: var(--txt); font-size: 14px; font-weight: 600; }
+  .tl .row { cursor: pointer; }
+  .tl .row:hover .bg { fill: #F1F5F8; }
+
+  .toggles { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+  label.chk { display: inline-flex; gap: 8px; align-items: center; min-height: 40px; cursor: pointer; font-size: 15px; }
+  label.chk input { width: 22px; height: 22px; accent-color: var(--acc); }
+  .btn { border: 2px solid var(--acc); background: #fff; color: var(--acc); font: inherit; font-size: 15px; font-weight: 600; border-radius: 10px; padding: 6px 14px; min-height: 42px; cursor: pointer; }
+  .btn.fill { background: var(--acc); color: #fff; }
+  .bigr { font-size: 34px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .muted { color: var(--muted); font-size: 15px; }
 
   table { border-collapse: collapse; width: 100%; font-size: 15px; }
   th, td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--grid); white-space: nowrap; }
   th { font-weight: 600; color: var(--muted); font-size: 14px; }
-  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
-  .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1.5px solid var(--line); border-radius: 12px; }
-  .raw th { position: sticky; top: 0; background: #fff; cursor: pointer; user-select: none; }
+  .r { text-align: right; font-variant-numeric: tabular-nums; }
+  .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .raw th { cursor: pointer; user-select: none; vertical-align: bottom; white-space: normal; min-width: 70px; }
   .raw th.sorted { color: var(--acc); }
-  .raw tr.out td { color: #9A9A9A; text-decoration: line-through; }
+  .raw tr.out td { color: #A0A0A0; text-decoration: line-through; }
   .raw tr.out td.keep, .raw tr.out td.why { text-decoration: none; }
   .raw td.why { color: var(--acc2); font-size: 14px; }
   .raw td.keep input { width: 22px; height: 22px; accent-color: var(--acc); }
-  .miss { color: #B0B0B0; }
+  .miss { color: #B5B5B5; }
 
-  .rules { display: grid; grid-template-columns: auto auto auto auto; gap: 8px 10px; align-items: center; margin: 8px 0 12px; max-width: 520px; }
-  .rules input { font: inherit; font-size: 16px; width: 92px; padding: 7px 8px; min-height: 42px; border: 1.5px solid var(--line); border-radius: 8px; }
+  .rules { display: grid; grid-template-columns: 1fr auto auto; gap: 8px 10px; align-items: center; margin-bottom: 8px; }
+  .rules input { font: inherit; font-size: 16px; width: 96px; padding: 7px 8px; min-height: 42px; border: 1.5px solid var(--line); border-radius: 8px; }
   .rules .h { font-size: 13px; color: var(--muted); font-weight: 700; }
+  .rules .u { font-size: 13px; color: var(--muted); }
+  .outlist { list-style: none; margin: 0; padding: 0; }
+  .outlist li { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--grid); cursor: pointer; }
+  .outlist .nr { font-weight: 700; min-width: 48px; }
+  .outlist .why { color: var(--acc2); }
 
-  .corr { border-collapse: separate; border-spacing: 3px; width: auto; }
-  .corr th { font-size: 13px; white-space: normal; max-width: 92px; line-height: 1.25; vertical-align: bottom; border: none; padding: 4px; }
-  .corr th.rowh { text-align: right; vertical-align: middle; max-width: 140px; }
-  .corr td { width: 74px; height: 56px; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
-  .corr td.diag { cursor: default; color: #9A9A9A; background: #FAFAFA; }
-  .legendbar { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 14px; color: var(--muted); }
-  .legendbar .grad { width: 220px; height: 14px; border-radius: 7px; background: linear-gradient(90deg, #A44400, #F2F2F2, #005A8D); }
+  .corr { border-collapse: separate; border-spacing: 3px; width: auto; margin: 0 auto; }
+  .corr th { font-size: 12px; white-space: normal; width: 50px; line-height: 1.2; vertical-align: bottom; border: none; padding: 2px; text-align: center; font-weight: 600; }
+  .corr th.rowh { text-align: right; vertical-align: middle; width: 120px; }
+  .corr td { width: 50px; height: 42px; text-align: center; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; border: none; border-radius: 6px; cursor: pointer; padding: 0; }
+  .corr td.diag { cursor: default; background: #FAFAFA; color: #C0C0C0; }
+  .corr td.sel { outline: 3px solid var(--txt); outline-offset: 1px; }
+  .legendbar { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+  .legendbar .grad { width: 180px; height: 12px; border-radius: 6px; background: linear-gradient(90deg, #A44400, #F2F2F2, #005A8D); }
 
-  #tip { position: fixed; z-index: 20; pointer-events: none; background: #1A1A1A; color: #fff; font-size: 14px; padding: 6px 10px; border-radius: 8px; max-width: 260px; display: none; line-height: 1.35; }
-  footer { margin-top: 40px; padding-top: 12px; border-top: 1px solid #E4E4E4; font-size: 14px; color: #8A8A8A; }
+  details.help { margin-top: 4px; }
+  details.help summary { cursor: pointer; color: var(--acc); font-weight: 600; font-size: 15px; min-height: 36px; display: flex; align-items: center; }
+  details.help ul { margin: 4px 0; padding-left: 20px; font-size: 15px; }
+
+  /* Fragebogen */
+  .qcard { display: grid; grid-template-columns: 44px 1fr; gap: 4px 14px; border: 1.5px solid var(--line); border-radius: 14px; padding: 14px 18px; margin-bottom: 12px; }
+  .qnum { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--acc); color: var(--acc); display: flex; align-items: center; justify-content: center; font-weight: 700; }
+  .qtext { font-weight: 600; }
+  .qform { color: var(--muted); font-size: 15px; }
+  .qtag { display: inline-block; margin-top: 6px; background: var(--tint); color: var(--acc); font-size: 14px; font-weight: 600; border-radius: 6px; padding: 2px 10px; }
+  .qtag.calc { background: var(--card); color: var(--muted); }
+  .scale9 { display: flex; gap: 4px; margin: 6px 0 2px; }
+  .scale9 span { width: 30px; height: 30px; border: 1.5px solid var(--line); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+  dialog { border: none; border-radius: 16px; padding: 0; width: min(520px, calc(100vw - 32px)); box-shadow: 0 10px 40px rgba(0,0,0,.25); font-family: inherit; color: var(--txt); }
+  dialog::backdrop { background: rgba(0,0,0,.35); }
+  .dlg { padding: 18px 20px; }
+  .dlg .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .dlg .close { border: none; background: var(--card); width: 42px; height: 42px; border-radius: 50%; font-size: 22px; cursor: pointer; }
+  .dlg dl { margin: 0; }
+  .dlg dt { color: var(--muted); font-size: 14px; margin-top: 10px; }
+  .dlg dd { margin: 0; font-weight: 700; }
+  .dlg .why { color: var(--acc2); font-weight: 600; margin-top: 12px; }
+  .dlg .foot { margin-top: 16px; display: flex; justify-content: flex-end; }
+
+  #tip { position: fixed; z-index: 30; pointer-events: none; background: #1A1A1A; color: #fff; font-size: 14px; padding: 6px 10px; border-radius: 8px; max-width: 260px; display: none; line-height: 1.35; }
+  footer { margin-top: 36px; padding-top: 12px; border-top: 1px solid #E4E4E4; font-size: 14px; color: #8A8A8A; }
 </style>
 </head>
 <body>
 <main>
   <h1>Datenboard: Handynutzung und Schlaf</h1>
-  <div class="bar"></div>
-  <div class="status" id="status">Daten werden geladen …</div>
+  <div class="sub" id="status"></div>
   <div id="banner"></div>
 
-  <details class="info">
-    <summary>Was wurde gefragt?</summary>
-    <ul>
-      <li><b>Alter:</b> „Wie alt bist du?“ (Jahre)</li>
-      <li><b>Einschlafen (Woche):</b> „Um wie viel Uhr schläfst du unter der Woche ungefähr ein?“</li>
-      <li><b>Aufwachen (Woche):</b> „Um wie viel Uhr wachst du unter der Woche ungefähr auf?“</li>
-      <li><b>Handy im Bett:</b> „Wie viele Minuten nutzt du unter der Woche ungefähr dein Handy, nachdem du dich ins Bett gelegt hast?“</li>
-      <li><b>Müdigkeit:</b> Skala von 1 (äußerst wach) bis 9 (sehr müde)</li>
-      <li><b>Einschlafen (Wochenende):</b> „Um wie viel Uhr schläfst du am Wochenende ungefähr ein, wenn du am nächsten Tag ausschlafen kannst?“</li>
-    </ul>
-    <p><b>Berechnet</b> (nicht gefragt):</p>
-    <ul>
-      <li><b>Schlafdauer (Woche):</b> Zeit von „Einschlafen (Woche)“ bis „Aufwachen (Woche)“ in Stunden</li>
-      <li><b>Verschiebung am Wochenende:</b> Wie viele Stunden später jemand am Wochenende einschläft als unter der Woche</li>
-    </ul>
-    <p class="muted">Die Umfrage war anonym. Einzelne Fragen konnten übersprungen werden, deshalb ist die Anzahl der Antworten (n) nicht überall gleich.</p>
-  </details>
-
-  <div class="controls">
-    <div>
-      <div class="lbl">Datensatz</div>
+  <nav>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="daten">Daten</button>
+      <button class="tab" role="tab" data-tab="bereinigen">Bereinigen</button>
+      <button class="tab" role="tab" data-tab="verteilung">Verteilung</button>
+      <button class="tab" role="tab" data-tab="zusammenhang">Zusammenhang</button>
+      <button class="tab sep" role="tab" data-tab="fragebogen">Fragebogen</button>
+    </div>
+    <div class="controls">
       <div class="seg" role="group" aria-label="Datensatz">
         <button type="button" data-mode="raw">Rohdaten</button>
         <button type="button" data-mode="clean">Bereinigt</button>
       </div>
-    </div>
-    <div>
-      <div class="lbl">Alter</div>
+      <span class="clbl">Alter</span>
       <div class="chips" id="ageChips"></div>
+      <div class="n" id="ncount"></div>
     </div>
-    <div class="ncount" id="ncount"></div>
-  </div>
-
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" data-tab="daten">Daten &amp; Bereinigung</button>
-    <button class="tab" role="tab" data-tab="verteilung">Verteilungen</button>
-    <button class="tab" role="tab" data-tab="zusammenhang">Zusammenhänge</button>
-    <button class="tab" role="tab" data-tab="korrelogramm">Korrelogramm</button>
-  </div>
+  </nav>
 
   <!-- DATEN -->
   <section class="panel" id="p-daten">
+    <div class="tiles" id="tiles"></div>
     <div class="card">
-      <h2>Regeln für die Bereinigung</h2>
-      <p class="muted" style="margin:0 0 6px">Lege fest, welche Antworten nicht in die Auswertung eingehen sollen. Ausgeschlossene Zeilen werden in der Tabelle durchgestrichen. Einzelne Zeilen kannst du auch per Haken ausschließen. Wähle oben „Bereinigt“, damit alle Diagramme nur die übrigen Antworten verwenden.</p>
-      <div class="rules" id="rules"></div>
-      <label class="chk"><input type="checkbox" id="complete"> Nur vollständige Antworten verwenden</label><br>
-      <button type="button" class="linkbtn" id="resetRules">Regeln zurücksetzen</button>
+      <div class="cardhead">
+        <h2>Alle Antworten</h2>
+        <div class="chips" id="tlSort"></div>
+      </div>
+      <div class="legend" style="margin-bottom:8px">
+        <span><span class="sw" style="background:var(--acc2)"></span>Handy im Bett</span>
+        <span><span class="sw" style="background:var(--acc)"></span>Schlaf (Mo–Fr)</span>
+        <span><span class="ring"></span>Einschlafen am Wochenende</span>
+      </div>
+      <div id="timeline" class="tl"></div>
     </div>
-    <div class="muted" id="cleanSummary" style="margin-bottom:8px"></div>
-    <div class="scroll"><table class="raw" id="rawTable"></table></div>
-    <p class="muted">Tipp: Tippe auf eine Spaltenüberschrift, um nach dieser Spalte zu sortieren.</p>
   </section>
 
-  <!-- VERTEILUNGEN -->
+  <!-- BEREINIGEN -->
+  <section class="panel" id="p-bereinigen" hidden>
+    <div class="grid2">
+      <div class="card">
+        <div class="cardhead"><h2>Regeln</h2><button type="button" class="btn" id="resetRules">Zurücksetzen</button></div>
+        <div class="rules" id="rules"></div>
+        <label class="chk"><input type="checkbox" id="complete"> Nur vollständige Antworten</label>
+      </div>
+      <div class="card">
+        <div class="cardhead"><h2 id="outHead">Ausgeschlossen</h2></div>
+        <ul class="outlist" id="outList"></ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="cardhead"><h2>Tabelle</h2><span class="muted">Spaltenkopf antippen zum Sortieren · Haken entfernen zum Ausschließen</span></div>
+      <div class="scroll"><table class="raw" id="rawTable"></table></div>
+    </div>
+  </section>
+
+  <!-- VERTEILUNG -->
   <section class="panel" id="p-verteilung" hidden>
-    <div class="pick">
-      <label for="distVar" class="lbl">Merkmal</label>
-      <select id="distVar"></select>
-      <label class="chk"><input type="checkbox" id="showNormal"> Normalverteilung einblenden</label>
+    <div class="chips" id="distChips" style="margin-bottom:12px"></div>
+    <div id="distQ"></div>
+    <div class="grid2 wide">
+      <div class="card">
+        <div class="cardhead"><h2 id="distTitle"></h2><label class="chk"><input type="checkbox" id="showNormal"> Normalverteilung</label></div>
+        <div id="histo"></div>
+      </div>
+      <div class="card">
+        <div id="distStats"></div>
+        <details class="help">
+          <summary>Was bedeuten die Kennwerte?</summary>
+          <ul>
+            <li><b>Mittelwert:</b> Summe aller Werte geteilt durch ihre Anzahl</li>
+            <li><b>Median:</b> der mittlere Wert, wenn alle Werte sortiert sind</li>
+            <li><b>Standardabweichung:</b> wie stark die Werte im Schnitt um den Mittelwert streuen</li>
+            <li><b>Normalverteilung:</b> symmetrische Glockenform; Mittelwert und Median liegen gleich, etwa zwei Drittel der Werte liegen höchstens eine Standardabweichung vom Mittelwert entfernt</li>
+          </ul>
+        </details>
+      </div>
     </div>
-    <div class="row two">
-      <div class="card"><div id="histo"></div></div>
-      <div class="card" id="distStats"></div>
-    </div>
-    <div class="card">
-      <h2>Kennwerte aller Merkmale</h2>
-      <div class="scroll" style="border:none"><table id="allStats"></table></div>
-    </div>
-    <details class="info">
-      <summary>Lesehilfe: Kennwerte und Normalverteilung</summary>
-      <ul>
-        <li><b>Mittelwert:</b> Summe aller Werte geteilt durch ihre Anzahl.</li>
-        <li><b>Median:</b> der Wert in der Mitte, wenn man alle Werte der Größe nach sortiert. Die Hälfte liegt darunter, die Hälfte darüber.</li>
-        <li><b>Standardabweichung:</b> wie stark die Werte im Durchschnitt um den Mittelwert streuen.</li>
-        <li><b>Normalverteilung:</b> eine symmetrische, glockenförmige Verteilung. Mittelwert und Median liegen bei ihr an derselben Stelle. Etwa zwei Drittel der Werte liegen höchstens eine Standardabweichung vom Mittelwert entfernt.</li>
-      </ul>
+    <details class="card">
+      <summary style="cursor:pointer;font-weight:700;font-size:19px">Alle Merkmale im Überblick</summary>
+      <div class="scroll" style="margin-top:12px"><table id="allStats"></table></div>
     </details>
   </section>
 
-  <!-- ZUSAMMENHÄNGE -->
+  <!-- ZUSAMMENHANG -->
   <section class="panel" id="p-zusammenhang" hidden>
-    <div class="pick">
-      <label for="xVar" class="lbl">x-Achse</label><select id="xVar"></select>
-      <label for="yVar" class="lbl">y-Achse</label><select id="yVar"></select>
+    <div>
+      <div class="card">
+        <div class="cardhead"><h2>Zwei Merkmale wählen</h2></div>
+        <div class="scroll"><table class="corr" id="corrTable"></table></div>
+        <div class="legendbar"><span>r = −1</span><span class="grad"></span><span>+1</span></div>
+      </div>
+      <div class="card" id="scatterCard">
+        <div class="cardhead">
+          <div><div class="muted" id="pairName"></div><div class="bigr" id="rVal"></div></div>
+          <button type="button" class="btn" id="swap">Achsen tauschen</button>
+        </div>
+        <div id="scatter"></div>
+        <div class="toggles">
+          <label class="chk"><input type="checkbox" id="showFit"> Trendlinie</label>
+          <label class="chk"><input type="checkbox" id="jitter" checked> Punkte auseinanderziehen</label>
+        </div>
+        <div id="pairQ" style="margin-top:10px"></div>
+        <details class="help">
+          <summary>Was bedeutet r?</summary>
+          <ul>
+            <li>r beschreibt, wie eng zwei Merkmale (linear) zusammenhängen, und liegt zwischen −1 und +1.</li>
+            <li>Positiv: „je mehr …, desto mehr …“ · negativ: „je mehr …, desto weniger …“</li>
+            <li>Faustregel nach Cohen (Betrag von r): ab 0,1 schwach, ab 0,3 mittel, ab 0,5 stark.</li>
+            <li>„Punkte auseinanderziehen“ macht übereinanderliegende Punkte sichtbar, r ändert sich dadurch nicht.</li>
+          </ul>
+        </details>
+      </div>
     </div>
-    <div class="pick">
-      <label class="chk"><input type="checkbox" id="showFit"> Trendlinie einblenden</label>
-      <label class="chk"><input type="checkbox" id="jitter"> Punkte leicht auseinanderziehen</label>
-    </div>
-    <div class="row two">
-      <div class="card"><div id="scatter"></div></div>
-      <div class="card" id="scatterStats"></div>
-    </div>
-    <details class="info">
-      <summary>Lesehilfe: Korrelationskoeffizient r</summary>
-      <ul>
-        <li>r beschreibt, wie eng zwei Merkmale (linear) zusammenhängen. r liegt immer zwischen −1 und +1.</li>
-        <li><b>Vorzeichen:</b> positiv heißt „je mehr …, desto mehr …“, negativ heißt „je mehr …, desto weniger …“.</li>
-        <li><b>Stärke</b> (Faustregel nach Cohen, Betrag von r): ab 0,1 schwach, ab 0,3 mittel, ab 0,5 stark.</li>
-        <li>Viele Antworten liegen auf denselben Werten (z. B. volle Viertelstunden). „Punkte leicht auseinanderziehen“ macht übereinanderliegende Punkte sichtbar, verändert r aber nicht.</li>
-      </ul>
-    </details>
   </section>
 
-  <!-- KORRELOGRAMM -->
-  <section class="panel" id="p-korrelogramm" hidden>
-    <div class="card">
-      <h2>Korrelogramm</h2>
-      <p class="muted" style="margin:0 0 10px">Jede Zelle zeigt den Korrelationskoeffizienten r für zwei Merkmale. Tippe auf eine Zelle, um das passende Streudiagramm zu öffnen.</p>
-      <div class="scroll" style="border:none"><table class="corr" id="corrTable"></table></div>
-      <div class="legendbar"><span>−1</span><span class="grad"></span><span>+1</span></div>
-    </div>
+  <!-- FRAGEBOGEN -->
+  <section class="panel" id="p-fragebogen" hidden>
+    <p class="muted" style="margin-top:0">So sah die Umfrage aus. Gemeint war immer ein normaler Tag unter der Woche – außer bei Frage 6.</p>
+    <div id="questions"></div>
   </section>
 
   <footer>Waibel · Psychologie J1</footer>
 </main>
+
+<dialog id="detail"><div class="dlg" id="detailBody"></div></dialog>
 <div id="tip"></div>
 
 <script src="testdaten.js"></script>
@@ -215,37 +272,34 @@
 /* Die Daten kommen aus daten.js (Bindeglied) im Standardformat – siehe dort. */
 
 const VARS = {
-  alter:        { label: "Alter",                       short: "Alter",              unit: "Jahre", int: true },
-  einschlafen:  { label: "Einschlafen (Woche)",         short: "Einschlafen Woche",  type: "time" },
-  aufwachen:    { label: "Aufwachen (Woche)",           short: "Aufwachen Woche",    type: "time" },
-  schlafdauer:  { label: "Schlafdauer (Woche)",         short: "Schlafdauer Woche",  type: "dur", unit: "h" },
-  minuten:      { label: "Handy im Bett",               short: "Handy im Bett",      unit: "min" },
-  muede:        { label: "Müdigkeit (1–9)",             short: "Müdigkeit",          unit: "", int: true },
-  wochenende:   { label: "Einschlafen (Wochenende)",    short: "Einschlafen WE",     type: "time" },
-  verschiebung: { label: "Verschiebung am Wochenende",  short: "Verschiebung WE",    type: "dur", unit: "h" },
+  alter:        { label: "Alter",                     unit: "Jahre", int: true, q: 1, frage: "Wie alt bist du?", form: "Zahl in Jahren" },
+  einschlafen:  { label: "Einschlafzeit Mo–Fr",       type: "time", q: 2, frage: "Um wie viel Uhr schläfst du unter der Woche ungefähr ein?", form: "Uhrzeit, Auswahl in Viertelstunden von 19:00 bis 04:00 Uhr" },
+  aufwachen:    { label: "Aufwachzeit Mo–Fr",         type: "time", q: 3, frage: "Um wie viel Uhr wachst du unter der Woche ungefähr auf?", form: "Uhrzeit, Auswahl in Viertelstunden von 03:00 bis 12:00 Uhr" },
+  minuten:      { label: "Handyzeit im Bett",         unit: "min", q: 4, frage: "Wie viele Minuten nutzt du unter der Woche ungefähr dein Handy, nachdem du dich ins Bett gelegt hast?", form: "Zahl in Minuten (Hinweis: „Schätze ungefähr. Wenn du es gar nicht nutzt, trage 0 ein.“)" },
+  muede:        { label: "Müdigkeit",                 unit: "", int: true, q: 5, frage: "Wie müde bist du unter der Woche normalerweise am Vormittag?", form: "Skala von 1 bis 9", scale: true },
+  wochenende:   { label: "Einschlafzeit Wochenende",  type: "time", q: 6, frage: "Um wie viel Uhr schläfst du am Wochenende ungefähr ein, wenn du am nächsten Tag ausschlafen kannst?", form: "Uhrzeit, Auswahl in Viertelstunden von 19:00 bis 07:00 Uhr" },
+  schlafdauer:  { label: "Schlafdauer Mo–Fr",         type: "dur", unit: "h", calc: "Zeit von der Einschlafzeit Mo–Fr (Frage 2) bis zur Aufwachzeit Mo–Fr (Frage 3)" },
+  verschiebung: { label: "Wochenend-Verschiebung",    type: "dur", unit: "h", calc: "So viel später schläft jemand am Wochenende ein als unter der Woche: Einschlafzeit Wochenende (Frage 6) minus Einschlafzeit Mo–Fr (Frage 2)" },
 };
 const KEYS = Object.keys(VARS);
-const ASKED = ["alter", "einschlafen", "aufwachen", "minuten", "muede", "wochenende"];
+const ASKED = KEYS.filter(k => VARS[k].q);
 const RULE_VARS = ["alter", "minuten", "schlafdauer"];
-const STORE = "datenboard-schlaf-v1";
+const STORE = "datenboard-schlaf-v2";
 
 let RAW = [], DS = null;
 const state = {
-  mode: "raw", ages: null, tab: "daten",
-  distVar: "schlafdauer", normal: false,
+  mode: "raw", ages: null, tab: "daten", tsort: "idx",
+  distVar: "minuten", normal: false,
   x: "minuten", y: "schlafdauer", fit: false, jitter: true,
   rules: {}, complete: false, excluded: new Set(),
   sort: { key: "idx", dir: 1 },
 };
 
 /* ---------- Speichern (nur in diesem Browser) ---------- */
-function save() {
-  try { localStorage.setItem(STORE, JSON.stringify({ rules: state.rules, complete: state.complete, excluded: [...state.excluded], mode: state.mode })); } catch (e) {}
-}
+function save() { try { localStorage.setItem(STORE, JSON.stringify({ rules: state.rules, complete: state.complete, excluded: [...state.excluded], mode: state.mode })); } catch (e) {} }
 function restore() {
   try {
-    const s = JSON.parse(localStorage.getItem(STORE) || "null");
-    if (!s) return;
+    const s = JSON.parse(localStorage.getItem(STORE) || "null"); if (!s) return;
     state.rules = s.rules || {}; state.complete = !!s.complete;
     state.excluded = new Set(s.excluded || []); state.mode = s.mode === "clean" ? "clean" : "raw";
   } catch (e) {}
@@ -254,8 +308,9 @@ function restore() {
 /* ---------- Formatierung ---------- */
 const de = (n, d = 1) => n.toLocaleString("de-DE", { maximumFractionDigits: d, minimumFractionDigits: 0 });
 const sign = n => (n < 0 ? "−" : "") + de(Math.abs(n), 2);
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 function clock(h) { let m = Math.round(h * 60); m = ((m % 1440) + 1440) % 1440; return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); }
-function hm(h) { const neg = h < 0; let m = Math.round(Math.abs(h) * 60); return (neg ? "−" : "") + Math.floor(m / 60) + ":" + String(m % 60).padStart(2, "0") + " h"; }
+function hm(h) { const neg = h < 0; const m = Math.round(Math.abs(h) * 60); return (neg ? "−" : "") + Math.floor(m / 60) + ":" + String(m % 60).padStart(2, "0") + " h"; }
 function fmt(k, v) {
   if (v == null || !isFinite(v)) return "–";
   const d = VARS[k];
@@ -263,20 +318,21 @@ function fmt(k, v) {
   if (d.type === "dur") return hm(v);
   return de(v, 1) + (d.unit ? " " + d.unit : "");
 }
-function fmtTick(k, v) {
-  const d = VARS[k];
-  if (d.type === "time") return clock(v);
-  if (d.type === "dur") return de(v, 2);
-  return de(v, 1);
-}
+const fmtSd = (k, v) => VARS[k].type ? hm(v) : de(v, 1) + (VARS[k].unit && VARS[k].unit !== "Jahre" ? " " + VARS[k].unit : "");
+function fmtTick(k, v) { const d = VARS[k]; return d.type === "time" ? clock(v) : d.type === "dur" ? de(v, 2) : de(v, 1); }
 function axisTitle(k) { const d = VARS[k]; return d.label + (d.type === "time" ? " (Uhrzeit)" : d.unit ? " in " + d.unit : ""); }
+function qbox(k, ax) {
+  const d = VARS[k], pre = ax ? `<span class="ax">${ax}</span>` : "";
+  return d.q ? `<div class="qbox">${pre}<span class="qn">Frage ${d.q}</span>${esc(d.frage)}</div>`
+             : `<div class="qbox calc">${pre}<span class="qn">berechnet</span>${esc(d.calc)}</div>`;
+}
 
 /* ---------- Statistik ---------- */
 const vals = (rows, k) => rows.map(r => r[k]).filter(v => v != null && isFinite(v));
 const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
 function median(a) { const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }
 function sd(a) { if (a.length < 2) return 0; const m = mean(a); return Math.sqrt(a.reduce((s, v) => s + (v - m) ** 2, 0) / (a.length - 1)); }
-function pairs(rows, kx, ky) { return rows.filter(r => r[kx] != null && r[ky] != null && isFinite(r[kx]) && isFinite(r[ky])); }
+const pairs = (rows, kx, ky) => rows.filter(r => r[kx] != null && r[ky] != null);
 function pearson(rows, kx, ky) {
   const p = pairs(rows, kx, ky); if (p.length < 3) return { r: null, n: p.length };
   const mx = mean(p.map(r => r[kx])), my = mean(p.map(r => r[ky]));
@@ -287,27 +343,26 @@ function pearson(rows, kx, ky) {
 }
 
 /* ---------- Daten aus dem Standardformat übernehmen ---------- */
-function num(s) { s = String(s ?? "").trim().replace(",", "."); if (!s) return null; const v = Number(s); return isFinite(v) ? v : null; }
 function tm(s) { const m = String(s ?? "").match(/^\s*(\d{1,2}):(\d{2})/); return m ? +m[1] + +m[2] / 60 : null; }
-function night(h) { return h == null ? null : (h < 12 ? h + 24 : h); }
+const night = h => h == null ? null : (h < 12 ? h + 24 : h);
+function num(s) { s = String(s ?? "").trim().replace(",", "."); if (!s) return null; const v = Number(s); return isFinite(v) ? v : null; }
 function derive(r) {
   r.schlafdauer = r.einschlafen != null && r.aufwachen != null ? r.aufwachen + 24 - r.einschlafen : null;
   r.verschiebung = r.einschlafen != null && r.wochenende != null ? r.wochenende - r.einschlafen : null;
   return r;
 }
-// prüft jede Antwort gegen das Standardformat; Ungültiges wird zu null und gemeldet
 function readDataset(ds) {
   const problems = [];
   const list = ds && Array.isArray(ds.antworten) ? ds.antworten : null;
   if (!list) return { rows: [], problems: ["window.DATENSATZ fehlt oder hat kein Feld „antworten“."] };
+  const isNum = v => typeof v === "number" && isFinite(v);
+  const isTime = v => typeof v === "string" && /^\d{1,2}:\d{2}$/.test(v) && tm(v) < 24 && +v.split(":")[1] < 60;
   const check = (a, i, k, ok, conv) => {
     const v = a[k];
     if (v === null || v === undefined) { if (v === undefined) problems.push(`Antwort ${i + 1}: Feld „${k}“ fehlt`); return null; }
     if (!ok(v)) { problems.push(`Antwort ${i + 1}: „${k}“ = ${JSON.stringify(v)} passt nicht zum Format`); return null; }
     return conv(v);
   };
-  const isNum = v => typeof v === "number" && isFinite(v);
-  const isTime = v => typeof v === "string" && /^\d{1,2}:\d{2}$/.test(v) && tm(v) < 24 && +v.split(":")[1] < 60;
   const seen = new Set();
   const rows = list.map((a, i) => {
     let id = a.id != null ? String(a.id) : "#" + (i + 1);
@@ -334,37 +389,143 @@ function excludedWhy(r) {
   for (const k of RULE_VARS) {
     const rule = state.rules[k] || {}, v = r[k];
     if (v == null) continue;
-    if (rule.min != null && v < rule.min) return `${VARS[k].short} unter ${de(rule.min, 2)}`;
-    if (rule.max != null && v > rule.max) return `${VARS[k].short} über ${de(rule.max, 2)}`;
+    if (rule.min != null && v < rule.min) return `${VARS[k].label} unter ${de(rule.min, 2)}`;
+    if (rule.max != null && v > rule.max) return `${VARS[k].label} über ${de(rule.max, 2)}`;
   }
   return null;
 }
+const ageOk = r => !state.ages || state.ages.has(r.alter);
 const base = () => RAW.filter(r => state.mode === "raw" || !excludedWhy(r));
-const active = () => base().filter(r => !state.ages || state.ages.has(r.alter));
+const active = () => base().filter(ageOk);
 
 /* ---------- Tooltip ---------- */
 const tip = document.getElementById("tip");
 function showTip(e, html) { tip.innerHTML = html; tip.style.display = "block"; const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8), y = e.clientY - tip.offsetHeight - 12; tip.style.left = x + "px"; tip.style.top = (y < 8 ? e.clientY + 18 : y) + "px"; }
-document.addEventListener("pointermove", e => { const el = e.target.closest && e.target.closest("[data-tip]"); el ? showTip(e, el.dataset.tip) : (tip.style.display = "none"); });
-document.addEventListener("pointerdown", e => { const el = e.target.closest && e.target.closest("[data-tip]"); el ? showTip(e, el.dataset.tip) : (tip.style.display = "none"); });
+function tipHandler(e) { const el = e.target.closest && e.target.closest("[data-tip]"); el ? showTip(e, el.dataset.tip) : (tip.style.display = "none"); }
+document.addEventListener("pointermove", tipHandler);
+document.addEventListener("pointerdown", tipHandler);
 
-/* ---------- Achsen ---------- */
+/* ---------- Achsen-Hilfen ---------- */
 function stepFor(k, span, target = 7) {
   const d = VARS[k];
-  const c = d.type === "time" || d.type === "dur" ? [0.25, 0.5, 1, 2, 3, 6, 12] : d.int ? [1, 2, 5, 10, 20, 50] : [5, 10, 15, 30, 60, 120, 240, 600];
+  const c = d.type ? [0.25, 0.5, 1, 2, 3, 6, 12] : d.int ? [1, 2, 5, 10, 20, 50] : [5, 10, 15, 30, 60, 120, 240, 600];
   return c.find(s => span / s <= target) || c[c.length - 1];
 }
 function ticks(k, a, b, target) { const s = stepFor(k, b - a, target), out = []; for (let v = Math.ceil(a / s - 1e-9) * s; v <= b + 1e-9; v += s) out.push(+v.toFixed(6)); return out; }
 function niceMax(n) { if (n <= 5) return Math.max(n, 1); const s = n <= 10 ? 2 : n <= 25 ? 5 : 10; return Math.ceil(n / s) * s; }
-const esc = s => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
-/* ---------- Histogramm ---------- */
+/* ---------- DATEN: Kennzahlen + Zeitleiste ---------- */
+function tiles() {
+  const rows = active();
+  const t = (v, l) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+  const m = k => { const v = vals(rows, k); return v.length ? fmt(k, mean(v)) : "–"; };
+  document.getElementById("tiles").innerHTML =
+    t(rows.length, "Antworten") + t(m("schlafdauer"), "Schlafdauer Mo–Fr · Mittelwert") +
+    t(m("minuten"), "Handyzeit im Bett · Mittelwert") + t(m("muede").replace(" ", ""), "Müdigkeit (1–9) · Mittelwert");
+}
+const SORTS = [["idx", "Eingang"], ["einschlafen", "Einschlafzeit"], ["schlafdauer", "Schlafdauer"], ["minuten", "Handyzeit"], ["muede", "Müdigkeit"]];
+function timeline() {
+  document.getElementById("tlSort").innerHTML = `<span class="clbl">Sortieren</span>` + SORTS.map(([k, l]) => `<button class="chip" data-tsort="${k}" aria-pressed="${state.tsort === k}">${l}</button>`).join("");
+  const k = state.tsort;
+  const rows = RAW.filter(ageOk).sort((a, b) => { const va = a[k], vb = b[k]; if (va == null) return 1; if (vb == null) return -1; return va - vb || a.idx - b.idx; });
+  const W = 960, RH = 26, TOP = 40, X0 = 18, X1 = 36, L = 70, R = 790, CA = 850, CM = 925;
+  const sx = h => L + (Math.max(X0, Math.min(X1, h)) - X0) / (X1 - X0) * (R - L);
+  const H = TOP + rows.length * RH + 34;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Zeitleiste aller Antworten">`;
+  for (let t = X0; t <= X1; t += 2) {
+    s += `<line x1="${sx(t)}" x2="${sx(t)}" y1="${TOP - 6}" y2="${H - 28}" stroke="${t === 24 ? "#C8C8C8" : "#EFEFEF"}"/>`;
+    s += `<text x="${sx(t)}" y="${TOP - 14}" text-anchor="middle">${clock(t)}</text><text x="${sx(t)}" y="${H - 10}" text-anchor="middle">${clock(t)}</text>`;
+  }
+  s += `<text x="24" y="${TOP - 14}" text-anchor="middle" class="ttl">Nr.</text><text x="${CA}" y="${TOP - 14}" text-anchor="middle" class="ttl">Alter</text><text x="${CM}" y="${TOP - 14}" text-anchor="middle" class="ttl">Müdigkeit</text>`;
+  rows.forEach((r, i) => {
+    const y = TOP + i * RH, cy = y + RH / 2, why = excludedWhy(r), faded = state.mode === "clean" && why;
+    s += `<g class="row" data-row="${esc(r.id)}" opacity="${faded ? 0.25 : 1}" data-tip="Antwort ${r.idx}${faded ? " · ausgeschlossen: " + esc(why) : ""}<br>antippen für alle Angaben">`;
+    s += `<rect class="bg" x="0" y="${y}" width="${W}" height="${RH}" fill="transparent"/>`;
+    s += `<text x="24" y="${cy + 5}" text-anchor="middle">${r.idx}</text>`;
+    if (r.einschlafen == null) s += `<text x="${L + 6}" y="${cy + 5}" class="miss" style="fill:#B5B5B5">keine Uhrzeiten angegeben</text>`;
+    else {
+      if (r.minuten > 0) {
+        const a = r.einschlafen - r.minuten / 60;
+        s += `<rect x="${sx(a)}" y="${cy - 6}" width="${Math.max(2, sx(r.einschlafen) - sx(a) - 1)}" height="12" rx="3" fill="#A44400"/>`;
+        if (a < X0) s += `<path d="M${L - 2},${cy} l8,-7 v14 z" fill="#A44400"/>`;
+      }
+      if (r.aufwachen != null) {
+        const b = r.aufwachen + 24;
+        s += `<rect x="${sx(r.einschlafen)}" y="${cy - 6}" width="${Math.max(2, sx(b) - sx(r.einschlafen))}" height="12" rx="3" fill="#005A8D"/>`;
+      }
+      if (r.wochenende != null) s += `<circle cx="${sx(r.wochenende)}" cy="${cy}" r="6" fill="#fff" stroke="#1A1A1A" stroke-width="2"/>`;
+    }
+    s += `<text x="${CA}" y="${cy + 5}" text-anchor="middle" style="fill:#1A1A1A">${r.alter ?? "–"}</text><text x="${CM}" y="${cy + 5}" text-anchor="middle" style="fill:#1A1A1A">${r.muede ?? "–"}</text></g>`;
+  });
+  s += `</svg>`;
+  document.getElementById("timeline").innerHTML = rows.length ? s : `<p class="muted">Keine Antworten.</p>`;
+}
+
+/* ---------- Detailansicht einer Antwort ---------- */
+const dlg = document.getElementById("detail");
+function openDetail(id) {
+  const r = RAW.find(x => x.id === id); if (!r) return;
+  const why = excludedWhy(r);
+  const item = k => `<dt>${VARS[k].q ? "Frage " + VARS[k].q + ": " + esc(VARS[k].frage) : esc(VARS[k].label) + " (berechnet)"}</dt><dd>${fmt(k, r[k])}</dd>`;
+  document.getElementById("detailBody").innerHTML = `
+    <div class="head"><h2>Antwort ${r.idx}</h2><button class="close" type="button" aria-label="Schließen" data-close>×</button></div>
+    <div class="muted">${r.ts ? "eingegangen " + esc(shortTs(r.ts)) : ""}</div>
+    <dl>${ASKED.map(item).join("")}${item("schlafdauer")}${item("verschiebung")}</dl>
+    ${why ? `<div class="why">Ausgeschlossen: ${esc(why)}</div>` : ""}
+    <div class="foot"><button class="btn ${state.excluded.has(r.id) ? "fill" : ""}" type="button" data-toggle="${esc(r.id)}">${state.excluded.has(r.id) ? "Wieder einbeziehen" : "Von Hand ausschließen"}</button></div>`;
+  tip.style.display = "none";
+  dlg.showModal();
+}
+dlg.addEventListener("click", e => {
+  if (e.target === dlg || e.target.closest("[data-close]")) { dlg.close(); return; }
+  const t = e.target.closest("[data-toggle]");
+  if (t) { const id = t.dataset.toggle; state.excluded.has(id) ? state.excluded.delete(id) : state.excluded.add(id); save(); render(); openDetail(id); }
+});
+
+/* ---------- BEREINIGEN ---------- */
+function rulesUI() {
+  let h = `<span class="h">Merkmal</span><span class="h">mindestens</span><span class="h">höchstens</span>`;
+  RULE_VARS.forEach(k => {
+    const r = state.rules[k] || {}, u = VARS[k].unit;
+    h += `<span>${VARS[k].label}<br><span class="u">in ${u}</span></span>
+      <input type="number" inputmode="decimal" step="any" data-rule="${k}" data-b="min" value="${r.min ?? ""}" placeholder="–" aria-label="${VARS[k].label} mindestens">
+      <input type="number" inputmode="decimal" step="any" data-rule="${k}" data-b="max" value="${r.max ?? ""}" placeholder="–" aria-label="${VARS[k].label} höchstens">`;
+  });
+  document.getElementById("rules").innerHTML = h;
+  document.getElementById("complete").checked = state.complete;
+}
+function outList() {
+  const out = RAW.map(r => [r, excludedWhy(r)]).filter(x => x[1]);
+  document.getElementById("outHead").textContent = `Ausgeschlossen: ${out.length} von ${RAW.length}`;
+  document.getElementById("outList").innerHTML = out.length ? out.map(([r, w]) => `<li data-row="${esc(r.id)}"><span class="nr">Nr. ${r.idx}</span><span class="why">${esc(w)}</span></li>`).join("") : `<li style="cursor:default" class="muted">Noch keine Antwort ausgeschlossen.</li>`;
+}
+const COLS = [["idx", "Nr."], ["ts", "Eingang"], ...KEYS.map(k => [k, VARS[k].label + (VARS[k].calc ? "*" : "")])];
+function rawTable() {
+  const { key, dir } = state.sort;
+  const rows = [...RAW].sort((a, b) => { const va = key === "ts" ? a.idx : a[key], vb = key === "ts" ? b.idx : b[key]; if (va == null) return 1; if (vb == null) return -1; return (va - vb) * dir; });
+  let h = `<tr><th>dabei</th>${COLS.map(([k, l]) => `<th class="${k === key ? "sorted" : ""} ${k === "ts" ? "" : "r"}" data-sort="${k}">${l}${k === key ? (dir > 0 ? " ▲" : " ▼") : ""}</th>`).join("")}<th>Grund</th></tr>`;
+  rows.forEach(r => {
+    const why = excludedWhy(r);
+    h += `<tr class="${why ? "out" : ""}"><td class="keep"><input type="checkbox" data-id="${esc(r.id)}" ${state.excluded.has(r.id) ? "" : "checked"} aria-label="Antwort ${r.idx} einbeziehen"></td>
+      <td class="r">${r.idx}</td><td>${esc(shortTs(r.ts))}</td>
+      ${KEYS.map(k => `<td class="r ${r[k] == null ? "miss" : ""}">${r[k] == null ? "–" : fmt(k, r[k]).replace(" Uhr", "").replace(" Jahre", "")}</td>`).join("")}
+      <td class="why">${why || ""}</td></tr>`;
+  });
+  document.getElementById("rawTable").innerHTML = h + `<tr><td colspan="${COLS.length + 2}" class="muted" style="border:none">* berechnet</td></tr>`;
+}
+
+/* ---------- VERTEILUNG ---------- */
+function distChips() {
+  document.getElementById("distChips").innerHTML = KEYS.map(k => `<button class="chip" data-dist="${k}" aria-pressed="${state.distVar === k}">${VARS[k].label}</button>`).join("");
+}
 function histogram(k, rows) {
   const v = vals(rows, k), d = VARS[k];
-  const el = document.getElementById("histo");
-  if (v.length < 1) { el.innerHTML = `<p class="muted">Keine Werte vorhanden.</p>`; return; }
+  document.getElementById("distQ").innerHTML = qbox(k);
+  document.getElementById("distTitle").textContent = d.label;
+  const el = document.getElementById("histo"), st = document.getElementById("distStats");
+  if (!v.length) { el.innerHTML = `<p class="muted">Keine Werte vorhanden.</p>`; st.innerHTML = ""; return; }
   const lo = Math.min(...v), hi = Math.max(...v);
-  const cands = d.type === "time" || d.type === "dur" ? [0.25, 0.5, 1, 2] : d.int ? [1, 2, 5, 10] : [5, 10, 15, 30, 60, 120, 240];
+  const cands = d.type ? [0.25, 0.5, 1, 2] : d.int ? [1, 2, 5, 10] : [5, 10, 15, 30, 60, 120, 240];
   let w, start;
   for (w of cands) { start = d.int ? Math.floor(lo) - 0.5 : Math.floor(lo / w + 1e-9) * w; if ((hi - start) / w < 24) break; }
   const nb = Math.max(1, Math.floor((hi - start) / w + 1e-9) + 1);
@@ -375,11 +536,11 @@ function histogram(k, rows) {
   const sx = x => M.l + (x - x0) / (x1 - x0) * (W - M.l - M.r), sy = y => H - M.b - y / ymax * (H - M.t - M.b);
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Histogramm ${esc(d.label)}">`;
   const ys = ymax <= 10 ? 1 : ymax <= 25 ? 5 : 10;
-  for (let y = 0; y <= ymax; y += ys) s += `<line x1="${M.l}" x2="${W - M.r}" y1="${sy(y)}" y2="${sy(y)}" stroke="${y ? "#E8E8E8" : "#9A9A9A"}"/><text x="${M.l - 8}" y="${sy(y) + 4}" text-anchor="end">${y}</text>`;
+  for (let y = 0; y <= ymax; y += ys) s += `<line x1="${M.l}" x2="${W - M.r}" y1="${sy(y)}" y2="${sy(y)}" stroke="${y ? "#EAEAEA" : "#9A9A9A"}"/><text x="${M.l - 8}" y="${sy(y) + 4}" text-anchor="end">${y}</text>`;
   bins.forEach(b => {
     if (!b.c) return;
-    const xa = sx(b.a) + 1, xb = sx(b.b) - 1, bw = Math.max(1, xb - xa), y = sy(b.c), h = sy(0) - y, r = Math.min(4, bw / 2, h);
-    const range = d.int && w === 1 ? `${VARS[k].short} ${de(b.a + 0.5)}` : d.int ? `${de(b.a + 0.5)}–${de(b.b - 0.5)}` : `${fmtTick(k, b.a)}–${fmtTick(k, b.b)}${d.type === "time" ? " Uhr" : d.unit ? " " + d.unit : ""}`;
+    const xa = sx(b.a) + 1, bw = Math.max(1, sx(b.b) - sx(b.a) - 2), y = sy(b.c), r = Math.min(4, bw / 2, sy(0) - y);
+    const range = d.int && w === 1 ? `${d.label} ${de(b.a + 0.5)}` : d.int ? `${de(b.a + 0.5)}–${de(b.b - 0.5)}` : `${fmtTick(k, b.a)}–${fmtTick(k, b.b)}${d.type === "time" ? " Uhr" : " " + d.unit}`;
     s += `<path d="M${xa},${sy(0)}V${y + r}Q${xa},${y} ${xa + r},${y}H${xa + bw - r}Q${xa + bw},${y} ${xa + bw},${y + r}V${sy(0)}Z" fill="#005A8D" data-tip="${esc(range)}: <b>${b.c}</b> ${b.c === 1 ? "Antwort" : "Antworten"}"/>`;
   });
   const tv = d.int && w === 1 && nb <= 20 ? bins.map(b => b.a + 0.5) : ticks(k, x0, x1, 8);
@@ -396,116 +557,95 @@ function histogram(k, rows) {
   s += `<line x1="${sx(m)}" x2="${sx(m)}" y1="${M.t - 6}" y2="${sy(0)}" stroke="#1A1A1A" stroke-width="2" data-tip="Mittelwert: ${esc(fmt(k, m))}"/>`;
   s += `<line x1="${sx(md)}" x2="${sx(md)}" y1="${M.t - 6}" y2="${sy(0)}" stroke="#1A1A1A" stroke-width="2" stroke-dasharray="5 4" data-tip="Median: ${esc(fmt(k, md))}"/>`;
   s += `<text x="${sx(m) + (mL ? -6 : 6)}" y="${M.t - 12}" text-anchor="${mL ? "end" : "start"}" style="fill:#1A1A1A;font-weight:600">Mittelwert</text>`;
-  s += `<text x="${sx(md) + (mL ? 6 : -6)}" y="${M.t - 12}" text-anchor="${mL ? "start" : "end"}" style="fill:#1A1A1A;font-weight:600">Median</text>`;
-  s += `</svg>`;
-  if (state.normal) s += `<div class="muted" style="display:flex;gap:8px;align-items:center;margin-top:6px"><span style="width:24px;height:3px;background:#A44400;display:inline-block"></span>Normalverteilung mit demselben Mittelwert und derselben Standardabweichung</div>`;
+  s += `<text x="${sx(md) + (mL ? 6 : -6)}" y="${M.t - 12}" text-anchor="${mL ? "start" : "end"}" style="fill:#1A1A1A;font-weight:600">Median</text></svg>`;
+  if (state.normal) s += `<div class="legend" style="margin-top:6px"><span><span class="sw" style="background:#A44400;height:3px"></span>Normalverteilung mit gleichem Mittelwert und gleicher Standardabweichung</span></div>`;
   el.innerHTML = s;
-  document.getElementById("distStats").innerHTML = `<h2>${esc(d.label)}</h2>
-    <table>
-      <tr><td>Anzahl (n)</td><td class="n">${v.length}</td></tr>
-      <tr><td>Mittelwert</td><td class="n">${fmt(k, m)}</td></tr>
-      <tr><td>Median</td><td class="n">${fmt(k, md)}</td></tr>
-      <tr><td>Standardabweichung</td><td class="n">${d.type === "time" ? hm(sdev) : fmt(k, sdev).replace(" Jahre", "")}</td></tr>
-      <tr><td>Minimum</td><td class="n">${fmt(k, lo)}</td></tr>
-      <tr><td>Maximum</td><td class="n">${fmt(k, hi)}</td></tr>
+  st.innerHTML = `<table>
+      <tr><td>Anzahl (n)</td><td class="r"><b>${v.length}</b></td></tr>
+      <tr><td>Mittelwert</td><td class="r"><b>${fmt(k, m)}</b></td></tr>
+      <tr><td>Median</td><td class="r"><b>${fmt(k, md)}</b></td></tr>
+      <tr><td>Standardabweichung</td><td class="r"><b>${fmtSd(k, sdev)}</b></td></tr>
+      <tr><td>Minimum</td><td class="r"><b>${fmt(k, lo)}</b></td></tr>
+      <tr><td>Maximum</td><td class="r"><b>${fmt(k, hi)}</b></td></tr>
     </table>`;
 }
 function allStats(rows) {
-  let h = `<tr><th>Merkmal</th><th class="n">n</th><th class="n">Mittelwert</th><th class="n">Median</th><th class="n">Standardabw.</th><th class="n">Minimum</th><th class="n">Maximum</th></tr>`;
+  let h = `<tr><th>Merkmal</th><th class="r">n</th><th class="r">Mittelwert</th><th class="r">Median</th><th class="r">Standardabw.</th><th class="r">Minimum</th><th class="r">Maximum</th></tr>`;
   KEYS.forEach(k => {
     const v = vals(rows, k);
-    if (!v.length) { h += `<tr><td>${VARS[k].label}</td><td class="n">0</td><td colspan="5" class="miss">keine Werte</td></tr>`; return; }
-    const s = sd(v);
-    h += `<tr><td>${VARS[k].label}</td><td class="n">${v.length}</td><td class="n">${fmt(k, mean(v))}</td><td class="n">${fmt(k, median(v))}</td><td class="n">${VARS[k].type === "time" ? hm(s) : fmt(k, s).replace(" Jahre", "")}</td><td class="n">${fmt(k, Math.min(...v))}</td><td class="n">${fmt(k, Math.max(...v))}</td></tr>`;
+    h += !v.length ? `<tr><td>${VARS[k].label}</td><td class="r">0</td><td colspan="5" class="miss">keine Werte</td></tr>`
+      : `<tr><td>${VARS[k].label}</td><td class="r">${v.length}</td><td class="r">${fmt(k, mean(v))}</td><td class="r">${fmt(k, median(v))}</td><td class="r">${fmtSd(k, sd(v))}</td><td class="r">${fmt(k, Math.min(...v))}</td><td class="r">${fmt(k, Math.max(...v))}</td></tr>`;
   });
   document.getElementById("allStats").innerHTML = h;
 }
 
-/* ---------- Streudiagramm ---------- */
+/* ---------- ZUSAMMENHANG ---------- */
+function mix(a, b, t) { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b); return "rgb(" + A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(",") + ")"; }
+const nb = l => esc(l).replace("Mo–Fr", '<span style="white-space:nowrap">Mo–Fr</span>');
+function corrTable(rows) {
+  let h = `<tr><th></th>${KEYS.map(k => `<th>${nb(VARS[k].label)}</th>`).join("")}</tr>`;
+  KEYS.forEach(ky => {
+    h += `<tr><th class="rowh">${nb(VARS[ky].label)}</th>`;
+    KEYS.forEach(kx => {
+      if (kx === ky) { h += `<td class="diag"></td>`; return; }
+      const c = pearson(rows, kx, ky);
+      const sel = (kx === state.x && ky === state.y) || (kx === state.y && ky === state.x) ? " sel" : "";
+      if (c.r == null) { h += `<td class="diag${sel}" data-x="${kx}" data-y="${ky}">·</td>`; return; }
+      const a = Math.abs(c.r), bg = mix("#F2F2F2", c.r >= 0 ? "#005A8D" : "#A44400", Math.min(1, a)), fg = a > 0.5 ? "#fff" : "#1A1A1A";
+      h += `<td class="${sel}" style="background:${bg};color:${fg}" data-x="${kx}" data-y="${ky}" data-tip="${esc(VARS[kx].label)} × ${esc(VARS[ky].label)}<br>r = ${sign(c.r)} · n = ${c.n}">${sign(c.r)}</td>`;
+    });
+    h += `</tr>`;
+  });
+  document.getElementById("corrTable").innerHTML = h;
+}
 function hash(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return ((h >>> 0) % 10000) / 10000 - 0.5; }
 function scatter(rows) {
   const kx = state.x, ky = state.y, el = document.getElementById("scatter");
-  const p = pairs(rows, kx, ky);
-  const stats = document.getElementById("scatterStats");
-  if (p.length < 2) { el.innerHTML = `<p class="muted">Zu wenige Werte für ein Streudiagramm.</p>`; stats.innerHTML = ""; return; }
+  const p = pairs(rows, kx, ky), c = pearson(rows, kx, ky);
+  document.getElementById("pairName").textContent = `${VARS[kx].label} × ${VARS[ky].label} · n = ${c.n}`;
+  document.getElementById("rVal").textContent = "r = " + (c.r == null ? "–" : sign(c.r));
+  document.getElementById("pairQ").innerHTML = qbox(kx, "x") + qbox(ky, "y");
+  if (p.length < 2) { el.innerHTML = `<p class="muted">Zu wenige Werte für ein Streudiagramm.</p>`; return; }
   const jit = k => !state.jitter ? 0 : VARS[k].int ? 0.35 : (VARS[k].type ? 0.1 : 0);
-  const dom = k => { const v = p.map(r => r[k]); let a = Math.min(...v), b = Math.max(...v); const pad = VARS[k].int ? 0.6 : (b - a || 1) * 0.06; return [a - pad, b + pad]; };
+  const dom = k => { const v = p.map(r => r[k]); const a = Math.min(...v), b = Math.max(...v); const pad = VARS[k].int ? 0.6 : (b - a || 1) * 0.06; return [a - pad, b + pad]; };
   const [x0, x1] = dom(kx), [y0, y1] = dom(ky);
-  const W = 720, H = 460, M = { l: 70, r: 20, t: 18, b: 58 };
+  const W = 720, H = 480, M = { l: 72, r: 20, t: 18, b: 60 };
   const sx = x => M.l + (x - x0) / (x1 - x0) * (W - M.l - M.r), sy = y => H - M.b - (y - y0) / (y1 - y0) * (H - M.t - M.b);
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Streudiagramm">`;
-  ticks(ky, y0, y1, 7).forEach(t => s += `<line x1="${M.l}" x2="${W - M.r}" y1="${sy(t)}" y2="${sy(t)}" stroke="#E8E8E8"/><text x="${M.l - 8}" y="${sy(t) + 4}" text-anchor="end">${fmtTick(ky, t)}</text>`);
-  ticks(kx, x0, x1, 8).forEach(t => s += `<line x1="${sx(t)}" x2="${sx(t)}" y1="${M.t}" y2="${H - M.b}" stroke="#E8E8E8"/><text x="${sx(t)}" y="${H - M.b + 20}" text-anchor="middle">${fmtTick(kx, t)}</text>`);
+  ticks(ky, y0, y1, 7).forEach(t => s += `<line x1="${M.l}" x2="${W - M.r}" y1="${sy(t)}" y2="${sy(t)}" stroke="#EAEAEA"/><text x="${M.l - 8}" y="${sy(t) + 4}" text-anchor="end">${fmtTick(ky, t)}</text>`);
+  ticks(kx, x0, x1, 8).forEach(t => s += `<line x1="${sx(t)}" x2="${sx(t)}" y1="${M.t}" y2="${H - M.b}" stroke="#EAEAEA"/><text x="${sx(t)}" y="${H - M.b + 20}" text-anchor="middle">${fmtTick(kx, t)}</text>`);
   s += `<line x1="${M.l}" x2="${W - M.r}" y1="${H - M.b}" y2="${H - M.b}" stroke="#9A9A9A"/><line x1="${M.l}" x2="${M.l}" y1="${M.t}" y2="${H - M.b}" stroke="#9A9A9A"/>`;
-  const c = pearson(rows, kx, ky);
   if (state.fit && c.r != null) {
     const f = x => c.my + c.slope * (x - c.mx);
     s += `<clipPath id="pc"><rect x="${M.l}" y="${M.t}" width="${W - M.l - M.r}" height="${H - M.t - M.b}"/></clipPath><line clip-path="url(#pc)" x1="${sx(x0)}" y1="${sy(f(x0))}" x2="${sx(x1)}" y2="${sy(f(x1))}" stroke="#A44400" stroke-width="2.5"/>`;
   }
   p.forEach(r => {
     const jx = hash(r.id + "x") * 2 * jit(kx), jy = hash(r.id + "y") * 2 * jit(ky);
-    const t = `${esc(VARS[kx].short)}: <b>${esc(fmt(kx, r[kx]))}</b><br>${esc(VARS[ky].short)}: <b>${esc(fmt(ky, r[ky]))}</b>${r.alter != null ? "<br>Alter: " + de(r.alter) : ""}`;
-    s += `<circle cx="${sx(r[kx] + jx).toFixed(1)}" cy="${sy(r[ky] + jy).toFixed(1)}" r="6" fill="#005A8D" fill-opacity=".6" stroke="#fff" stroke-width="1.5" data-tip="${t}"/>`;
+    const t = `Antwort ${r.idx}<br>${esc(VARS[kx].label)}: <b>${esc(fmt(kx, r[kx]))}</b><br>${esc(VARS[ky].label)}: <b>${esc(fmt(ky, r[ky]))}</b>`;
+    s += `<circle cx="${sx(r[kx] + jx).toFixed(1)}" cy="${sy(r[ky] + jy).toFixed(1)}" r="6.5" fill="#005A8D" fill-opacity=".6" stroke="#fff" stroke-width="1.5" data-tip="${t}" data-row="${esc(r.id)}" style="cursor:pointer"/>`;
   });
-  s += `<text class="ttl" x="${(M.l + W - M.r) / 2}" y="${H - 12}" text-anchor="middle">${esc(axisTitle(kx))}</text>`;
-  s += `<text class="ttl" x="16" y="${(M.t + H - M.b) / 2}" text-anchor="middle" transform="rotate(-90 16 ${(M.t + H - M.b) / 2})">${esc(axisTitle(ky))}</text></svg>`;
-  if (state.fit) s += `<div class="muted" style="display:flex;gap:8px;align-items:center;margin-top:6px"><span style="width:24px;height:3px;background:#A44400;display:inline-block"></span>Trendlinie (Regressionsgerade)</div>`;
+  s += `<text class="ttl" x="${(M.l + W - M.r) / 2}" y="${H - 14}" text-anchor="middle">x: ${esc(axisTitle(kx))}</text>`;
+  s += `<text class="ttl" x="16" y="${(M.t + H - M.b) / 2}" text-anchor="middle" transform="rotate(-90 16 ${(M.t + H - M.b) / 2})">y: ${esc(axisTitle(ky))}</text></svg>`;
+  if (state.fit) s += `<div class="legend" style="margin-top:6px"><span><span class="sw" style="background:#A44400;height:3px"></span>Trendlinie (Regressionsgerade)</span></div>`;
   el.innerHTML = s;
-  stats.innerHTML = `<h2>Zusammenhang</h2>
-    <p style="margin:0 0 4px">${esc(VARS[kx].label)} und ${esc(VARS[ky].label)}</p>
-    <div class="big">r = ${c.r == null ? "–" : sign(c.r)}</div>
-    <p class="muted" style="margin:4px 0 0">n = ${c.n} Antworten mit beiden Werten</p>`;
 }
 
-/* ---------- Korrelogramm ---------- */
-function mix(a, b, t) { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b); return "rgb(" + A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(",") + ")"; }
-function corrTable(rows) {
-  let h = `<tr><th></th>${KEYS.map(k => `<th>${VARS[k].short}</th>`).join("")}</tr>`;
-  KEYS.forEach(ky => {
-    h += `<tr><th class="rowh">${VARS[ky].short}</th>`;
-    KEYS.forEach(kx => {
-      if (kx === ky) { h += `<td class="diag">–</td>`; return; }
-      const c = pearson(rows, kx, ky);
-      if (c.r == null) { h += `<td class="diag" data-tip="Zu wenige Werte">·</td>`; return; }
-      const a = Math.abs(c.r), bg = mix("#F2F2F2", c.r >= 0 ? "#005A8D" : "#A44400", Math.min(1, a)), fg = a > 0.5 ? "#fff" : "#1A1A1A";
-      h += `<td style="background:${bg};color:${fg}" data-x="${kx}" data-y="${ky}" data-tip="${esc(VARS[kx].short)} × ${esc(VARS[ky].short)}<br>r = ${sign(c.r)} · n = ${c.n}">${sign(c.r)}</td>`;
-    });
-    h += `</tr>`;
-  });
-  document.getElementById("corrTable").innerHTML = h;
+/* ---------- FRAGEBOGEN ---------- */
+function questions() {
+  let h = ASKED.map(k => {
+    const d = VARS[k];
+    return `<div class="qcard"><div class="qnum">${d.q}</div><div>
+      <div class="qtext">${esc(d.frage)}</div>
+      <div class="qform">${esc(d.form)}</div>
+      ${d.scale ? `<div class="scale9">${[1,2,3,4,5,6,7,8,9].map(i => `<span>${i}</span>`).join("")}</div><div class="qform">1 = äußerst wach · 9 = sehr müde, ich kämpfe gegen den Schlaf</div>` : ""}
+      <span class="qtag">im Datenboard: ${esc(d.label)}</span></div></div>`;
+  }).join("");
+  h += `<div class="card" style="margin-top:18px"><h2 style="margin-bottom:8px">Berechnete Merkmale</h2>` +
+    KEYS.filter(k => VARS[k].calc).map(k => `<p style="margin:6px 0"><span class="qtag calc">${esc(VARS[k].label)}</span><br>${esc(VARS[k].calc)}</p>`).join("") + `</div>`;
+  document.getElementById("questions").innerHTML = h;
 }
 
-/* ---------- Rohdaten-Tabelle ---------- */
-const COLS = [["idx", "Nr."], ["ts", "Eingang"], ...KEYS.map(k => [k, VARS[k].short + (k === "schlafdauer" || k === "verschiebung" ? "*" : "")])];
-function rawTable() {
-  const { key, dir } = state.sort;
-  const rows = [...RAW].sort((a, b) => { const va = key === "ts" ? a.idx : a[key], vb = key === "ts" ? b.idx : b[key]; if (va == null) return 1; if (vb == null) return -1; return (va - vb) * dir; });
-  let h = `<tr><th>dabei</th>${COLS.map(([k, l]) => `<th class="${k === key ? "sorted" : ""} ${k === "ts" ? "" : "n"}" data-sort="${k}">${l}${k === key ? (dir > 0 ? " ▲" : " ▼") : ""}</th>`).join("")}<th>Hinweis</th></tr>`;
-  rows.forEach(r => {
-    const why = excludedWhy(r);
-    h += `<tr class="${why ? "out" : ""}"><td class="keep"><input type="checkbox" data-id="${esc(r.id)}" ${state.excluded.has(r.id) ? "" : "checked"} aria-label="Antwort ${r.idx} einbeziehen"></td>
-      <td class="n">${r.idx}</td><td>${esc(shortTs(r.ts))}</td>
-      ${KEYS.map(k => `<td class="n ${r[k] == null ? "miss" : ""}">${r[k] == null ? "–" : fmt(k, r[k]).replace(" Uhr", "").replace(" Jahre", "")}</td>`).join("")}
-      <td class="why">${why || ""}</td></tr>`;
-  });
-  document.getElementById("rawTable").innerHTML = h;
-  const n = RAW.filter(r => excludedWhy(r)).length;
-  document.getElementById("cleanSummary").textContent = `${RAW.length} Antworten insgesamt · ${n} ausgeschlossen · ${RAW.length - n} bleiben übrig  (* = berechnet)`;
-}
-function rulesUI() {
-  let h = `<span class="h">Merkmal</span><span class="h">mindestens</span><span class="h">höchstens</span><span></span>`;
-  RULE_VARS.forEach(k => {
-    const r = state.rules[k] || {}, u = VARS[k].unit || "";
-    h += `<span>${VARS[k].short}</span>
-      <input type="number" inputmode="decimal" step="any" data-rule="${k}" data-b="min" value="${r.min ?? ""}" placeholder="–">
-      <input type="number" inputmode="decimal" step="any" data-rule="${k}" data-b="max" value="${r.max ?? ""}" placeholder="–">
-      <span class="muted">${u}</span>`;
-  });
-  document.getElementById("rules").innerHTML = h;
-  document.getElementById("complete").checked = state.complete;
-}
-
-/* ---------- Steuerung ---------- */
+/* ---------- Gesamtsteuerung ---------- */
 function ageChips() {
   const ages = [...new Set(vals(base(), "alter"))].sort((a, b) => a - b);
   if (state.ages) state.ages = new Set([...state.ages].filter(a => ages.includes(a)));
@@ -514,8 +654,7 @@ function ageChips() {
     ages.map(a => `<button class="chip" data-age="${a}" aria-pressed="${!!state.ages && state.ages.has(a)}">${de(a)}</button>`).join("");
 }
 function renderStatus() {
-  const st = document.getElementById("status");
-  st.innerHTML = `<span>${RAW.length} Antworten</span>${DS && DS.stand ? `<span>Stand: ${esc(DS.stand)}</span>` : ""}`;
+  document.getElementById("status").textContent = `${RAW.length} Antworten${DS && DS.stand ? " · Stand: " + DS.stand : ""}`;
   document.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === state.mode));
   document.getElementById("ncount").textContent = `n = ${active().length}`;
 }
@@ -523,16 +662,12 @@ function renderPanel() {
   document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.tab === state.tab));
   document.querySelectorAll(".panel").forEach(p => p.hidden = p.id !== "p-" + state.tab);
   const rows = active();
-  if (state.tab === "daten") rawTable();
-  if (state.tab === "verteilung") { histogram(state.distVar, rows); allStats(rows); }
-  if (state.tab === "zusammenhang") scatter(rows);
-  if (state.tab === "korrelogramm") corrTable(rows);
+  if (state.tab === "daten") { tiles(); timeline(); }
+  if (state.tab === "bereinigen") { outList(); rawTable(); }
+  if (state.tab === "verteilung") { distChips(); histogram(state.distVar, rows); allStats(rows); }
+  if (state.tab === "zusammenhang") { corrTable(rows); scatter(rows); }
 }
 function render() { ageChips(); renderStatus(); renderPanel(); }
-
-function fillSelect(id, val) { document.getElementById(id).innerHTML = KEYS.map(k => `<option value="${k}" ${k === val ? "selected" : ""}>${VARS[k].label}</option>`).join(""); }
-fillSelect("distVar", state.distVar); fillSelect("xVar", state.x); fillSelect("yVar", state.y);
-document.getElementById("jitter").checked = state.jitter;
 
 document.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => { state.mode = b.dataset.mode; save(); render(); });
 document.getElementById("ageChips").onclick = e => {
@@ -542,31 +677,30 @@ document.getElementById("ageChips").onclick = e => {
   render();
 };
 document.querySelectorAll(".tab").forEach(t => t.onclick = () => { state.tab = t.dataset.tab; history.replaceState(null, "", "#" + state.tab); renderPanel(); });
-document.getElementById("distVar").onchange = e => { state.distVar = e.target.value; renderPanel(); };
+document.addEventListener("click", e => {
+  const row = e.target.closest("[data-row]"); if (row && !dlg.open) { openDetail(row.dataset.row); return; }
+  const ts = e.target.closest("[data-tsort]"); if (ts) { state.tsort = ts.dataset.tsort; timeline(); return; }
+  const dv = e.target.closest("[data-dist]"); if (dv) { state.distVar = dv.dataset.dist; renderPanel(); return; }
+  const td = e.target.closest("#corrTable td[data-x]"); if (td) { state.x = td.dataset.x; state.y = td.dataset.y; tip.style.display = "none"; renderPanel(); document.getElementById("scatterCard").scrollIntoView({ behavior: "smooth", block: "center" }); }
+});
 document.getElementById("showNormal").onchange = e => { state.normal = e.target.checked; renderPanel(); };
-document.getElementById("xVar").onchange = e => { state.x = e.target.value; renderPanel(); };
-document.getElementById("yVar").onchange = e => { state.y = e.target.value; renderPanel(); };
 document.getElementById("showFit").onchange = e => { state.fit = e.target.checked; renderPanel(); };
 document.getElementById("jitter").onchange = e => { state.jitter = e.target.checked; renderPanel(); };
+document.getElementById("swap").onclick = () => { [state.x, state.y] = [state.y, state.x]; renderPanel(); };
 document.getElementById("rules").oninput = e => {
   const i = e.target.closest("[data-rule]"); if (!i) return;
-  const k = i.dataset.rule, r = state.rules[k] = state.rules[k] || {};
-  r[i.dataset.b] = num(i.value); save(); ageChips(); renderStatus(); rawTable();
+  const r = state.rules[i.dataset.rule] = state.rules[i.dataset.rule] || {};
+  r[i.dataset.b] = num(i.value); save(); ageChips(); renderStatus(); outList(); rawTable();
 };
 document.getElementById("complete").onchange = e => { state.complete = e.target.checked; save(); render(); };
 document.getElementById("resetRules").onclick = () => { state.rules = {}; state.complete = false; state.excluded.clear(); save(); rulesUI(); render(); };
 document.getElementById("rawTable").onclick = e => {
-  const th = e.target.closest("[data-sort]");
-  if (th) { const k = th.dataset.sort; state.sort = { key: k, dir: state.sort.key === k ? -state.sort.dir : 1 }; rawTable(); return; }
+  const th = e.target.closest("[data-sort]"); if (!th) return;
+  const k = th.dataset.sort; state.sort = { key: k, dir: state.sort.key === k ? -state.sort.dir : 1 }; rawTable();
 };
 document.getElementById("rawTable").onchange = e => {
   const c = e.target.closest("input[data-id]"); if (!c) return;
-  c.checked ? state.excluded.delete(c.dataset.id) : state.excluded.add(c.dataset.id); save(); ageChips(); renderStatus(); rawTable();
-};
-document.getElementById("corrTable").onclick = e => {
-  const td = e.target.closest("td[data-x]"); if (!td) return;
-  state.x = td.dataset.x; state.y = td.dataset.y; fillSelect("xVar", state.x); fillSelect("yVar", state.y);
-  state.tab = "zusammenhang"; history.replaceState(null, "", "#zusammenhang"); tip.style.display = "none"; renderPanel(); scrollTo({ top: 0 });
+  c.checked ? state.excluded.delete(c.dataset.id) : state.excluded.add(c.dataset.id); save(); ageChips(); renderStatus(); outList(); rawTable();
 };
 
 function load() {
@@ -574,7 +708,7 @@ function load() {
   const { rows, problems } = readDataset(DS);
   RAW = rows;
   let b = "";
-  if (DS && DS.quelle === "test") b += `<div class="banner"><b>Beispieldaten:</b> Diese Seite zeigt erfundene Antworten, bis die echten Umfragedaten eingetragen sind.</div>`;
+  if (DS && DS.quelle === "test") b += `<div class="banner"><b>Beispieldaten:</b> erfundene Antworten zum Ausprobieren.</div>`;
   if (DS && !RAW.length && !problems.length) b += `<div class="banner">Es sind noch keine Antworten vorhanden.</div>`;
   if (problems.length) {
     console.warn("Datenformat:", problems);
@@ -586,8 +720,9 @@ function load() {
 
 restore();
 rulesUI();
-const h = location.hash.slice(1);
-if (["daten", "verteilung", "zusammenhang", "korrelogramm"].includes(h)) state.tab = h;
+questions();
+const h0 = location.hash.slice(1);
+if (["daten", "bereinigen", "verteilung", "zusammenhang", "fragebogen"].includes(h0)) state.tab = h0;
 load();
 </script>
 </body>
