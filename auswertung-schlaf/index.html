@@ -547,7 +547,7 @@ function histogram(k, rows) {
   const el = document.getElementById("histo"), st = document.getElementById("distStats");
   if (!v.length) { el.innerHTML = `<p class="muted">Keine Werte vorhanden.</p>`; st.innerHTML = ""; return; }
   const lo = Math.min(...v), hi = Math.max(...v);
-  const cands = d.type ? [0.25, 0.5, 1, 2] : d.int ? [1, 2, 5, 10] : [5, 10, 15, 30, 60, 120, 240];
+  const cands = d.type ? [0.5, 1, 2] : d.int ? [1, 2, 5, 10] : [5, 10, 15, 30, 60, 120, 240];   // Uhrzeiten/Dauern in halben Stunden
   let w, start;
   for (w of cands) { start = d.int ? Math.floor(lo) - 0.5 : Math.floor(lo / w + 1e-9) * w; if ((hi - start) / w < 24) break; }
   const nb = Math.max(1, Math.floor((hi - start) / w + 1e-9) + 1);
