@@ -228,7 +228,7 @@
       </div>
     </div>
     <details class="card">
-      <summary style="cursor:pointer;font-weight:700;font-size:19px">Alle Merkmale im Überblick</summary>
+      <summary style="cursor:pointer;font-weight:700;font-size:19px">Alle Variablen im Überblick</summary>
       <div class="scroll" style="margin-top:12px"><table id="allStats"></table></div>
     </details>
   </section>
@@ -257,8 +257,8 @@
         <details class="help">
           <summary>Was bedeutet r?</summary>
           <ul>
-            <li>r beschreibt, wie eng zwei Merkmale (linear) zusammenhängen, und liegt zwischen −1 und +1.</li>
-            <li>Positiv: „je mehr …, desto mehr …“ · negativ: „je mehr …, desto weniger …“</li>
+            <li>r beschreibt, wie eng zwei Variablen (linear) zusammenhängen, und liegt zwischen −1 und +1.</li>
+            <li>Positiv: „je mehr …, desto mehr …“ · negativ (Antikorrelation): „je mehr …, desto weniger …“</li>
             <li>Faustregel nach Cohen (Betrag von r): ab 0,1 schwach, ab 0,3 mittel, ab 0,5 stark.</li>
             <li>„Punkte auseinanderziehen“ macht übereinanderliegende Punkte sichtbar, r ändert sich dadurch nicht.</li>
           </ul>
@@ -342,7 +342,7 @@ function fmt(k, v) {
 }
 const fmtSd = (k, v) => VARS[k].type ? hm(v) : de(v, 1) + (VARS[k].unit && VARS[k].unit !== "Jahre" ? " " + VARS[k].unit : "");
 function fmtTick(k, v) { const d = VARS[k]; return d.type === "time" ? clock(v) : d.type === "dur" ? de(v, 2) : de(v, 1); }
-function axisTitle(k) { const d = VARS[k]; return d.label + (d.type === "time" ? " (Uhrzeit)" : d.unit ? " in " + d.unit : ""); }
+function axisTitle(k) { const d = VARS[k]; return d.label + (d.type === "time" ? " (Uhrzeit)" : d.unit ? " in " + (d.unit === "Jahre" ? "Jahren" : d.unit) : ""); }
 function qbox(k, ax) {
   const d = VARS[k], pre = ax ? `<span class="ax">${ax}</span>` : "";
   return d.q ? `<div class="qbox">${pre}<span class="qn">Frage ${d.q}</span>${esc(d.frage)}</div>`
@@ -506,7 +506,7 @@ dlg.addEventListener("click", e => {
 
 /* ---------- BEREINIGEN ---------- */
 function rulesUI() {
-  let h = `<span class="h">Merkmal</span><span class="h">mindestens</span><span class="h">höchstens</span>`;
+  let h = `<span class="h">Variable</span><span class="h">mindestens</span><span class="h">höchstens</span>`;
   RULE_VARS.forEach(k => {
     const r = state.rules[k] || {}, u = VARS[k].unit;
     h += `<span>${VARS[k].label}<br><span class="u">in ${u === "Jahre" ? "Jahren" : u}</span></span>
@@ -592,7 +592,7 @@ function histogram(k, rows) {
     </table>`;
 }
 function allStats(rows) {
-  let h = `<tr><th>Merkmal</th><th class="r">n</th><th class="r">Mittelwert</th><th class="r">Median</th><th class="r">Standardabw.</th><th class="r">Minimum</th><th class="r">Maximum</th></tr>`;
+  let h = `<tr><th>Variable</th><th class="r">n</th><th class="r">Mittelwert</th><th class="r">Median</th><th class="r">Standardabw.</th><th class="r">Minimum</th><th class="r">Maximum</th></tr>`;
   KEYS.forEach(k => {
     const v = vals(rows, k);
     h += !v.length ? `<tr><td>${VARS[k].label}</td><td class="r">0</td><td colspan="5" class="miss">keine Werte</td></tr>`
@@ -663,7 +663,7 @@ function questions() {
       ${d.scale ? `<div class="scale9">${[1,2,3,4,5,6,7,8,9].map(i => `<span>${i}</span>`).join("")}</div><div class="qform">1 = äußerst wach · 9 = sehr müde, ich kämpfe gegen den Schlaf</div>` : ""}
       <span class="qtag">im Datenboard: ${esc(d.label)}</span></div></div>`;
   }).join("");
-  h += `<div class="card" style="margin-top:18px"><h2 style="margin-bottom:8px">Berechnete Merkmale</h2>` +
+  h += `<div class="card" style="margin-top:18px"><h2 style="margin-bottom:8px">Berechnete Variablen</h2>` +
     KEYS.filter(k => VARS[k].calc).map(k => `<p style="margin:6px 0"><span class="qtag calc">${esc(VARS[k].label)}</span><br>${esc(VARS[k].calc)}</p>`).join("") + `</div>`;
   document.getElementById("questions").innerHTML = h;
 }
