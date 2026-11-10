@@ -329,7 +329,7 @@ function restore() {
 
 /* ---------- Formatierung ---------- */
 const de = (n, d = 1) => n.toLocaleString("de-DE", { maximumFractionDigits: d, minimumFractionDigits: 0 });
-const sign = n => (n < 0 ? "−" : "") + de(Math.abs(n), 2);
+const sign = n => (n < 0 ? "−" : "") + Math.abs(n).toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 function clock(h) { let m = Math.round(h * 60); m = ((m % 1440) + 1440) % 1440; return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); }
 function hm(h) { const neg = h < 0; const m = Math.round(Math.abs(h) * 60); return (neg ? "−" : "") + Math.floor(m / 60) + ":" + String(m % 60).padStart(2, "0") + " h"; }
